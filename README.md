@@ -1,8 +1,8 @@
 # Better-Discord-Plugins
 
-Made by: SyndiShanX#4620
+Made by: SyndiShanX
 
-Inspired by MemberCount by: Arashiryuu#3000
+Inspired by MemberCount by: Arashiryuu
 https://betterdiscord.app/plugin/MemberCount
 
 # Member Counter
