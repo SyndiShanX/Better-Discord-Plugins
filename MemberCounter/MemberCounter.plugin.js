@@ -2,7 +2,7 @@
  * @name MemberCounter
  * @author SyndiShanX
  * @description Displays the Member Count of a Server at the top of the Member List (Can be Styled using .member-counter-wrapper and .member-counter-text).
- * @version 1.1.0
+ * @version 1.1.2
  */
 
 const {Patcher, ReactUtils} = new BdApi("MemberCounter");
@@ -48,7 +48,7 @@ Utilities: {
 				}
 			}
 		});
-		observer.observe(document.body, {childList: true, subtree: true});
+		observer.observe(document.getElementsByClassName('membersWrap-3NUR2t')[0], {childList: false, subtree: true});
 	};
 }
 
