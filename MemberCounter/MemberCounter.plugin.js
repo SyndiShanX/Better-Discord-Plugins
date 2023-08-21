@@ -20,7 +20,7 @@ function createCounter() {
 			
 			const counterNum = document.createElement('h3');
 			counterNum.className = 'member-counter-text membersGroup-2eiWxl container-q97qHp';
-			counterNum.textContent = 'Members - ' + membersNum;
+			counterNum.textContent = 'Members - ' + membersNum.toLocaleString();
 			counterNum.style.color = 'var(--channels-default)';
 			counterWrapper.append(counterNum);
 			
