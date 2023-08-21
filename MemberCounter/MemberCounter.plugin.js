@@ -30,9 +30,7 @@ function createCounter() {
 let memberUpdater;
 
 module.exports = () => ({
-	start() {
-		createCounter();
-	},
+	start() {},
 	onSwitch() {
 		createCounter();
 	},
