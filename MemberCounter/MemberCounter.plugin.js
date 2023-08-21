@@ -1,41 +1,49 @@
 /**
  * @name MemberCounter
- * @author SyndiShanX
+ * @author SyndiShanX, imafrogowo
  * @description Displays the Member Count of a Server at the top of the Member List (Can be Styled using .member-counter-wrapper and .member-counter-text).
- * @version 1.1.0
+ * @version 2.0.0
+ * @invite yzYKRKeWNh
+ * @source https://github.com/SyndiShanX/Better-Discord-Plugins/blob/main/MemberCounter/
+ * @updateUrl https://github.com/SyndiShanX/Better-Discord-Plugins/blob/main/MemberCounter/MemberCounter.plugin.js
+ * @website https://syndishanx.github.io/Better-Discord-Plugins/
  */
 
-function createCounter() {
-	if ( document.getElementsByClassName('members-3WRCEx')[0] != undefined ) {
-		if ( document.getElementsByClassName('member-counter-wrapper')[0] == undefined ) {
-			const membersWrap = document.getElementsByClassName('members-3WRCEx')[0];
-			const SelectedGuildStore = BdApi.findModuleByProps('getLastSelectedGuildId');
-			var membersNum = BdApi.findModuleByProps('getMemberCounts').getMemberCount(SelectedGuildStore.getGuildId());
-			
-			const counterWrapper = document.createElement('div');
-			counterWrapper.className = 'member-counter-wrapper';
-			counterWrapper.style.textAlign = 'center';
-			
-			const counterNum = document.createElement('h3');
-			counterNum.className = 'member-counter-text membersGroup-2eiWxl container-q97qHp';
-			counterNum.textContent = 'Members - ' + membersNum.toLocaleString();
-			counterNum.style.color = 'var(--channels-default)';
-			counterWrapper.append(counterNum);
-			
-			membersWrap.prepend(counterWrapper);
-		}
+const { React, findModuleByProps, Patcher } = BdApi;
+
+class MemberCounter {
+	constructor() {
+		this.patches = [];
+	}
+	addPatch(patchType, moduleToPatch, functionName, callback) {
+		this.patches.push(
+			Patcher[patchType]("MemberCount", moduleToPatch, functionName, callback)
+		);
+	}
+	start() {
+		const MemberList = findModuleByProps("ListThin");
+		console.log(MemberList.ListThin);
+		this.addPatch("after", MemberList.ListThin, "render", (that, [args], ret) => {
+				const SelectedGuildStore = findModuleByProps("getLastSelectedGuildId");
+				var membersNum = findModuleByProps('getMemberCounts').getMemberCount(SelectedGuildStore.getGuildId());
+				if (membersNum == null) {membersNum = '0'}
+				const counterWrapper = React.createElement("div", {
+						className: "member-counter-wrapper",
+						style: { textAlign: "center" },
+					},
+					React.createElement("h3", {
+						className: "member-counter-text membersGroup-2eiWxl container-q97qHp",
+						style: { color: "var(--channels-default)" },
+					},
+					"Members - " + membersNum.toLocaleString())
+				);
+				const children = ret.props.children[0].props.children.props.children
+				children.splice(1,0,counterWrapper)
+				ret.props.children[0].props.children.props.children = children
+			}
+		);
+	}
+	stop() {
+		this.patches.forEach((x) => x());
 	}
 }
-
-let memberUpdater;
-
-module.exports = () => ({
-	start() {},
-	onSwitch() {
-		createCounter();
-	},
-	stop() {
-		clearInterval(memberUpdater);
-		document.getElementsByClassName('member-counter-wrapper')[0].remove();
-  }
-});
