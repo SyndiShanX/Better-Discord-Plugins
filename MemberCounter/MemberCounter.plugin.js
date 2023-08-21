@@ -48,7 +48,7 @@ Utilities: {
 				}
 			}
 		});
-		observer.observe(document.getElementsByClassName('membersWrap-3NUR2t')[0], {childList: false, subtree: true});
+		observer.observe(document.getElementsByClassName('membersWrap-3NUR2t')[0], {childList: true, subtree: true});
 	};
 }
 
