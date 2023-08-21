@@ -2,10 +2,8 @@
  * @name MemberCounter
  * @author SyndiShanX
  * @description Displays the Member Count of a Server at the top of the Member List (Can be Styled using .member-counter-wrapper and .member-counter-text).
- * @version 1.1.2
+ * @version 1.1.0
  */
-
-const {Patcher, ReactUtils} = new BdApi("MemberCounter");
 
 function createCounter() {
 	if ( document.getElementsByClassName('members-3WRCEx')[0] != undefined ) {
@@ -29,59 +27,17 @@ function createCounter() {
 	}
 }
 
-Utilities: {
-	var onceAdded = (selector, callback) => {
-		let directMatch;
-		if (directMatch = document.querySelector(selector)) {
-			callback(directMatch);
-			return () => null;
-		}
-		const cancel = () => observer.disconnect();
-		const observer = new MutationObserver(changes => {
-			for (const change of changes) {
-				if (!change.addedNodes.length) continue;
-				for (const node of change.addedNodes) {
-					const match = (node.matches(selector) && node) || node.querySelector(selector);
-					if (!match) continue;
-					cancel();
-					callback(match);
-				}
-			}
-		});
-		observer.observe(document.getElementsByClassName('membersWrap-3NUR2t')[0], {childList: true, subtree: true});
-	};
-}
-
-function walk(node, filter, {max = 200} = {}) {
-	const fiber = node[Object.keys(node).find(e => e.indexOf("__reactFiber") === 0)];
-	if (!fiber) return null;
-	let curr = fiber, i = 0;
-	while(curr !== null && i++ < max) {
-		if (filter(curr)) break;
-		curr = curr?.return;
-	}
-	return curr;
-}
-
-const membersWrap = document.querySelector('.members-3WRCEx')
+let memberUpdater;
 
 module.exports = () => ({
 	start() {
-		this.patchTextAreaButtons();
+		createCounter();
 	},
-	async patchTextAreaButtons() {
-		onceAdded('.members-3WRCEx', e => {
-			const vNodeTest = ReactUtils.getInternalInstance(e);
-			if (!vNodeTest) return;
-			const vNode = walk(membersWrap, vnode => vnode?.stateNode?.isReactComponent && vnode.stateNode.trackMemberListViewed)?.stateNode;
-			Patcher.after(vNode.constructor.prototype, "render", () => {
-				createCounter()
-			});
-		});
+	onSwitch() {
+		createCounter();
 	},
 	stop() {
-		if (document.getElementsByClassName('member-counter-wrapper')[0] != undefined) {
-			document.getElementsByClassName('member-counter-wrapper')[0].remove();
-		}
+		clearInterval(memberUpdater);
+		document.getElementsByClassName('member-counter-wrapper')[0].remove();
   }
 });
