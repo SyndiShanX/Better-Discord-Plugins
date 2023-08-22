@@ -9,7 +9,7 @@
  * @website https://syndishanx.github.io/Better-Discord-Plugins/
  */
 
-const { React, getModule, Filters, Webpack, Patcher } = BdApi;
+const { React, Filters, Webpack, Patcher } = BdApi;
 
 class MemberCounter {
   constructor() {
@@ -23,12 +23,13 @@ class MemberCounter {
 		const MemberList =  Webpack.getModule(Webpack.Filters.byKeys('ListThin'));
 		this.addPatch('after', MemberList.ListThin, 'render', (thisObj, [args], returnVal) => {
 			// Fetch the Member Count using BdApi
-			const SelectedGuildStore = Webpack.getModule(Webpack.Filters.byKeys('getLastSelectedGuildId'));
-			const GuildMemberCountStore = Webpack.getModule(Webpack.Filters.byKeys('getMemberCounts'));
+			const SelectedGuildStore = Webpack.getStore('SelectedGuildStore')
+			const GuildMemberCountStore = Webpack.getStore('GuildMemberCountStore')
 			var MemberCount = GuildMemberCountStore.getMemberCount(SelectedGuildStore.getGuildId());
 			// Check if Selected Channel is a Thread and Updates MemberCount
-			const SelectedChannelStore = Webpack.getModule(Webpack.Filters.byKeys('getLastSelectedChannelId'))
-			const currentSelectedChannel = Webpack.getModule(Webpack.Filters.byKeys('getChannel')).getChannel(SelectedChannelStore.getChannelId())
+			const SelectedChannelStore = Webpack.getStore('SelectedChannelStore')
+			const ChannelStore = Webpack.getStore('ChannelStore')
+			const currentSelectedChannel = ChannelStore.getChannel(SelectedChannelStore.getChannelId())
 			if (currentSelectedChannel.threadMetadata != undefined) {
 				if (currentSelectedChannel.memberCount == 50) {
 					MemberCount = '50+'
