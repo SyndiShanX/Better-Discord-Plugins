@@ -33,7 +33,7 @@ class MemberCounter {
           SelectedGuildStore.getGuildId()
         );
         const counterWrapper =
-          MemberCount !== undefined
+          MemberCount?.toLocaleString() !== undefined
             ? React.createElement(
                 "div",
                 {
@@ -47,7 +47,7 @@ class MemberCounter {
                       "member-counter-text membersGroup-2eiWxl container-q97qHp",
                     style: { color: "var(--channels-default)" },
                   },
-                  "Members - " + MemberCount.toLocaleString()
+                  "Members - " + MemberCount?.toLocaleString()
                 )
               )
             : null;
