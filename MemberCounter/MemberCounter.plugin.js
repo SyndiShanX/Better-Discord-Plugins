@@ -12,38 +12,53 @@
 const { React, findModuleByProps, Patcher } = BdApi;
 
 class MemberCounter {
-	constructor() {
-		this.patches = [];
-	}
-	addPatch(patchType, moduleToPatch, functionName, callback) {
-		this.patches.push(
-			Patcher[patchType]("MemberCount", moduleToPatch, functionName, callback)
-		);
-	}
-	start() {
-		const MemberList = findModuleByProps("ListThin");
-		console.log(MemberList.ListThin);
-		this.addPatch("after", MemberList.ListThin, "render", (that, [args], ret) => {
-				const SelectedGuildStore = findModuleByProps("getLastSelectedGuildId");
-				var membersNum = findModuleByProps('getMemberCounts').getMemberCount(SelectedGuildStore.getGuildId());
-				if (membersNum == null) {membersNum = '0'}
-				const counterWrapper = React.createElement("div", {
-						className: "member-counter-wrapper",
-						style: { textAlign: "center" },
-					},
-					React.createElement("h3", {
-						className: "member-counter-text membersGroup-2eiWxl container-q97qHp",
-						style: { color: "var(--channels-default)" },
-					},
-					"Members - " + membersNum.toLocaleString())
-				);
-				const children = ret.props.children[0].props.children.props.children
-				children.splice(1,0,counterWrapper)
-				ret.props.children[0].props.children.props.children = children
-			}
-		);
-	}
-	stop() {
-		this.patches.forEach((x) => x());
-	}
+  constructor() {
+    this.patches = [];
+  }
+  addPatch(patchType, moduleToPatch, functionName, callback) {
+    this.patches.push(
+      Patcher[patchType]("MemberCount", moduleToPatch, functionName, callback)
+    );
+  }
+  start() {
+    const MemberList = findModuleByProps("ListThin");
+    console.log(MemberList.ListThin);
+    this.addPatch(
+      "after",
+      MemberList.ListThin,
+      "render",
+      (SyndiShanXIsAwesome, [args], ret) => {
+        const SelectedGuildStore = findModuleByProps("getLastSelectedGuildId");
+        const MemberCount = findModuleByProps("getMemberCounts").getMemberCount(
+          SelectedGuildStore.getGuildId()
+        );
+        const counterWrapper =
+          MemberCount !== undefined
+            ? React.createElement(
+                "div",
+                {
+                  className: "member-counter-wrapper",
+                  style: { textAlign: "center" },
+                },
+                React.createElement(
+                  "h3",
+                  {
+                    className:
+                      "member-counter-text membersGroup-2eiWxl container-q97qHp",
+                    style: { color: "var(--channels-default)" },
+                  },
+                  "Members - " + MemberCount.toLocaleString()
+                )
+              )
+            : null;
+
+        const children = ret.props.children[0].props.children.props.children;
+        children.splice(1, 0, counterWrapper);
+        ret.props.children[0].props.children.props.children = children;
+      }
+    );
+  }
+  stop() {
+    this.patches.forEach((x) => x());
+  }
 }
