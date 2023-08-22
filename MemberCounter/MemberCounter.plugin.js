@@ -2,7 +2,7 @@
  * @name MemberCounter
  * @author SyndiShanX, imafrogowo
  * @description Displays the Member Count of a Server at the top of the Member List (Can be Styled using .member-counter-wrapper and .member-counter-text).
- * @version 2.0.3
+ * @version 2.0.4
  * @invite yzYKRKeWNh
  * @source https://github.com/SyndiShanX/Better-Discord-Plugins/blob/main/MemberCounter/
  * @updateUrl https://github.com/SyndiShanX/Better-Discord-Plugins/blob/main/MemberCounter/MemberCounter.plugin.js
@@ -24,20 +24,18 @@ class MemberCounter {
 		this.addPatch('after', MemberList.ListThin, 'render', (thisObj, [args], returnVal) => {
 			// Fetch the Member Count using BdApi
 			const SelectedGuildStore = Webpack.getModule(Webpack.Filters.byKeys('getLastSelectedGuildId'));
-			var MemberCount = Webpack.getModule(Webpack.Filters.byKeys('getMemberCounts')).getMemberCount(SelectedGuildStore.getGuildId());
+			const GuildMemberCountStore = Webpack.getModule(Webpack.Filters.byKeys('getMemberCounts'));
+			var MemberCount = GuildMemberCountStore.getMemberCount(SelectedGuildStore.getGuildId());
 			// Check if Selected Channel is a Thread and Updates MemberCount
 			if (document.querySelector('.chatContent-3KubbW') != null) {
 				if (document.querySelector('.chatContent-3KubbW').ariaLabel.split('thread').length == 2) {
-					const threadObj = returnVal.props.children[0].props.children.props
-					var threadMemberCount = 0
-					for (let i = 0; i < threadObj.children.length; i++) {
-						if (threadObj.children[i] != null) {
-							if (threadObj.children[i].props.userId != null) {
-								threadMemberCount = threadMemberCount + 1
-							}
-						}
+					const SelectedChannelStore = Webpack.getModule(Webpack.Filters.byKeys('getLastSelectedChannelId'))
+					const threadMemberCount = Webpack.getModule(Webpack.Filters.byKeys('getChannel')).getChannel(SelectedChannelStore.getChannelId()).memberCount
+					if (threadMemberCount == 50) {
+						MemberCount = '50+'
+					} else {
+						MemberCount = Webpack.getModule(Webpack.Filters.byKeys('getChannel')).getChannel(SelectedChannelStore.getChannelId()).memberCount
 					}
-					MemberCount = threadMemberCount
 				}
 			}
 			// Create Counter Elements as long as MemberCount is Defined
