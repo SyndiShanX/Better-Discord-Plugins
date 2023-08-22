@@ -29,7 +29,7 @@ class MemberCounter {
 			if (document.querySelector('.chatContent-3KubbW') != null) {
 				if (document.querySelector('.chatContent-3KubbW').ariaLabel.split('thread').length == 2) {
 					const threadObj = returnVal.props.children[0].props.children.props
-					threadMemberCount = 0
+					var threadMemberCount = 0
 					for (let i = 0; i < threadObj.children.length; i++) {
 						if (threadObj.children[i] != null) {
 							if (threadObj.children[i].props.userId != null) {
