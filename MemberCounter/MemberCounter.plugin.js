@@ -27,15 +27,13 @@ class MemberCounter {
 			const GuildMemberCountStore = Webpack.getModule(Webpack.Filters.byKeys('getMemberCounts'));
 			var MemberCount = GuildMemberCountStore.getMemberCount(SelectedGuildStore.getGuildId());
 			// Check if Selected Channel is a Thread and Updates MemberCount
-			if (document.querySelector('.chatContent-3KubbW') != null) {
-				if (document.querySelector('.chatContent-3KubbW').ariaLabel.split('thread').length == 2) {
-					const SelectedChannelStore = Webpack.getModule(Webpack.Filters.byKeys('getLastSelectedChannelId'))
-					const threadMemberCount = Webpack.getModule(Webpack.Filters.byKeys('getChannel')).getChannel(SelectedChannelStore.getChannelId()).memberCount
-					if (threadMemberCount == 50) {
-						MemberCount = '50+'
-					} else {
-						MemberCount = Webpack.getModule(Webpack.Filters.byKeys('getChannel')).getChannel(SelectedChannelStore.getChannelId()).memberCount
-					}
+			const SelectedChannelStore = Webpack.getModule(Webpack.Filters.byKeys('getLastSelectedChannelId'))
+			const currentSelectedChannel = Webpack.getModule(Webpack.Filters.byKeys('getChannel')).getChannel(SelectedChannelStore.getChannelId())
+			if (currentSelectedChannel.threadMetadata != undefined) {
+				if (currentSelectedChannel.memberCount == 50) {
+					MemberCount = '50+'
+				} else {
+					MemberCount = currentSelectedChannel.memberCount
 				}
 			}
 			// Create Counter Elements as long as MemberCount is Defined
