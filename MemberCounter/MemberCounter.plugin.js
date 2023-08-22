@@ -54,8 +54,8 @@ class MemberCounter {
 				const children = returnVal.props.children;
 				children.splice(0, 0, counterWrapper);
 				returnVal.props.children = children;
-			}}
-		);
+			}
+		});
   }
   stop() {
 		this.patches.forEach((x) => x());

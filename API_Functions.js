@@ -1,5 +1,5 @@
 // Define BdApi Functions
-const { React, getModule, Filters, Webpack, Patcher } = BdApi;
+const { React, Filters, Webpack, Patcher } = BdApi;
 
 // Fetch SelectedGuildStore and GuildMemberCountStore to get Member Count
 const SelectedGuildStore = Webpack.getStore('SelectedGuildStore')
