@@ -37,10 +37,11 @@ class MemberCounter {
 					},
 					"Members - " + MemberCount?.toLocaleString())) : null;
 			// Append Counter Elements to MemberList Element
-			const children = returnVal.props.children[0].props.children.props.children;
-			children.splice(1, 0, counterWrapper);
-			returnVal.props.children[0].props.children.props.children = children;
-			}
+			if (returnVal.props.className.startsWith('members')) {
+				const children = returnVal.props.children[0].props.children.props.children;
+				children.splice(1, 0, counterWrapper);
+				returnVal.props.children[0].props.children.props.children = children;
+			}}
 		);
   }
   stop() {
