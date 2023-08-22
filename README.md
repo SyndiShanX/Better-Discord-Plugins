@@ -1,6 +1,6 @@
 # Better-Discord-Plugins
 
-Made by: SyndiShanX
+Made by: SyndiShanX and ImaFrogOWO
 
 Inspired by MemberCount by: Arashiryuu
 https://betterdiscord.app/plugin/MemberCount
