@@ -14,3 +14,10 @@ ChannelStore.getChannel(SelectedChannelStore.getChannelId())
 // Alternate way of Fetching Thread Member Count
 const ThreadMembersStore = Webpack.getStore("ThreadMembersStore")
 ThreadMembersStore.getMemberCount(SelectedChannelStore.getChannelId())
+
+// Fetches the Store for a Given Function
+function getFunctionStore(functionString) {
+	dispatchToken = Webpack.getModule(Webpack.Filters.byKeys(functionString))._dispatchToken
+	console.log(Webpack.getModule(Webpack.Filters.byKeys(functionString))._dispatcher._actionHandlers._dependencyGraph.nodes[dispatchToken].name)
+}
+// Ex: getFunctionStore('getLastSelectedChannelId') >>> SelectedChannelStore
