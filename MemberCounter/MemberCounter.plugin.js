@@ -1,7 +1,7 @@
 /**
  * @name MemberCounter
  * @author SyndiShanX, imafrogowo
- * @description Displays the Member Count of a Server at the top of the Member List (Can be Styled using .member-counter-wrapper, .member-counter-text, .offline-member-counter, .online-member-counter, and dm-counter).
+ * @description Displays the Member Count of a Server at the top of the Member List (Can be Styled using .member-counter-wrapper, .member-counter-text, .offline-member-counter, .online-member-counter, and .dm-counter).
  * @version 2.0.5
  * @invite yzYKRKeWNh
  * @source https://github.com/SyndiShanX/Better-Discord-Plugins/blob/main/MemberCounter/
@@ -54,7 +54,7 @@ class MemberCounter {
 								className: "member-counter-text offline-member-counter membersGroup-2eiWxl container-q97qHp",
 								style: { color: "var(--channels-default)", fontWeight: "bold" },
 							},
-							`🔴 Offline - ` + OfflineCount
+							`🔴 Offline - ` + OfflineCount.toLocaleString()
 						)
 					);
 				}
@@ -69,7 +69,7 @@ class MemberCounter {
 							className: "member-counter-text online-member-counter membersGroup-2eiWxl container-q97qHp",
 							style: { color: "var(--channels-default)", fontWeight: "bold" },
 						},
-						`🟢 Online - ` + MemberCount
+						`🟢 Online - ` + MemberCount.toLocaleString()
 					)
 				);
 			} else {
@@ -81,7 +81,7 @@ class MemberCounter {
 							className: "member-counter-text online-member-counter membersGroup-2eiWxl container-q97qHp",
 							style: { color: "var(--channels-default)", fontWeight: "bold" },
 						},
-						`🟢 Members - ` + MemberCount
+						`🟢 Members - ` + MemberCount.toLocaleString()
 					)
 				);
 			}
@@ -93,7 +93,7 @@ class MemberCounter {
 						className: "member-counter-text dm-counter membersGroup-2eiWxl container-q97qHp",
 						style: { color: "var(--channels-default)", fontWeight: "bold" },
 					},
-					`🟢 DMs - ${DMCount?.length}`
+					`🟢 DMs - ${DMCount?.length.toLocaleString()}`
 				)
 			);
 			const counterWrapper = MemberCount?.toLocaleString() !== undefined ? (
