@@ -81,7 +81,7 @@ class MemberCounter {
 							className: "member-counter-text online-member-counter membersGroup-2eiWxl container-q97qHp",
 							style: { color: "var(--channels-default)", fontWeight: "bold" },
 						},
-						`🟢 Online - ` + MemberCount
+						`🟢 Members - ` + MemberCount
 					)
 				);
 			}
