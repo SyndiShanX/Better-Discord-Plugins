@@ -1,5 +1,5 @@
 // Define BdApi Functions
-const { React, Filters, Webpack, Patcher } = BdApi;
+const { Webpack: {getModule, getStore, Filters}, React, Patcher } = BdApi;
 
 // Fetch SelectedGuildStore and GuildMemberCountStore to get Member Count
 const SelectedGuildStore = Webpack.getStore('SelectedGuildStore')
@@ -21,3 +21,11 @@ function getFunctionStore(functionString) {
 	console.log(Webpack.getModule(Webpack.Filters.byKeys(functionString))._dispatcher._actionHandlers._dependencyGraph.nodes[dispatchToken].name)
 }
 // Ex: getFunctionStore('getLastSelectedChannelId') >>> SelectedChannelStore
+
+// Switch Themes
+Webpack.getModule(x=>x.updateTheme).updateTheme("light")
+Webpack.getModule(x=>x.updateTheme).updateTheme("dark")
+
+// Show Toast
+const { createToast, showToast } = BdApi.Webpack.getModule(x => x.createToast);
+showToast(createToast("Message Here!", 1));
