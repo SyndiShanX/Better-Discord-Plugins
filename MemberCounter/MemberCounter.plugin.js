@@ -51,7 +51,7 @@ class MemberCounter {
 							style: { textAlign: "center" },
 						},
 						React.createElement("h1", {
-								className: "member-counter-text offline-member-counter membersGroup-2eiWxl container-q97qHp",
+								className: "member-counter-text offline-member-counter membersGroup__85843 container_de798d",
 								style: { color: "var(--channels-default)", fontWeight: "bold" },
 							},
 							`🔴 Offline - ` + OfflineCount.toLocaleString()
@@ -66,7 +66,7 @@ class MemberCounter {
 						style: { textAlign: "center", marginBottom: "-10px" },
 					},
 					React.createElement("h1", {
-							className: "member-counter-text online-member-counter membersGroup-2eiWxl container-q97qHp",
+							className: "member-counter-text online-member-counter membersGroup__85843 container_de798d",
 							style: { color: "var(--channels-default)", fontWeight: "bold" },
 						},
 						`🟢 Online - ` + MemberCount.toLocaleString()
@@ -78,7 +78,7 @@ class MemberCounter {
 						style: { textAlign: "center" },
 					},
 					React.createElement("h1", {
-							className: "member-counter-text online-member-counter membersGroup-2eiWxl container-q97qHp",
+							className: "member-counter-text online-member-counter membersGroup__85843 container_de798d",
 							style: { color: "var(--channels-default)", fontWeight: "bold" },
 						},
 						`🟢 Members - ` + MemberCount.toLocaleString()
@@ -90,7 +90,7 @@ class MemberCounter {
 					style: { textAlign: "center", marginTop: "-20px" },
 				},
 				React.createElement("h3", {
-						className: "member-counter-text dm-counter membersGroup-2eiWxl container-q97qHp",
+						className: "member-counter-text dm-counter membersGroup__85843 container_de798d",
 						style: { color: "var(--channels-default)", fontWeight: "bold" },
 					},
 					`🟢 DMs - ${DMCount?.length.toLocaleString()}`
