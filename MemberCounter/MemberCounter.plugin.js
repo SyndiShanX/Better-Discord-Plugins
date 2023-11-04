@@ -107,10 +107,6 @@ class MemberCounter {
 				)
 			);
 			
-			// Debug Logs
-			//console.log(returnVal)
-			//console.log(returnVal.props.className)
-			
 			// Append Counter Elements | Selects Member List | Selects DM List
 			if (returnVal.props.className.startsWith('members')) {
 				const children = returnVal.props.children;
