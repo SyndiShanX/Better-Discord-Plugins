@@ -1,8 +1,8 @@
 /**
  * @name MemberCounter
  * @author SyndiShanX, imafrogowo
- * @description Displays the Member Count of a Server at the top of the Member List (Can be Styled using .member-counter-wrapper, .member-counter-text, .offline-member-counter, .online-member-counter, and .dm-counter).
- * @version 2.0.5
+ * @description Displays the Member Count of a Server at the top of the Member List (Can be Styled using .member_counter_wrapper, .member_counter_text, .offline_member_counter, .online_member_counter, and .dm_counter).
+ * @version 2.0.6
  * @invite yzYKRKeWNh
  * @source https://github.com/SyndiShanX/Better-Discord-Plugins/blob/main/MemberCounter/
  * @updateUrl https://github.com/SyndiShanX/Better-Discord-Plugins/blob/main/MemberCounter/MemberCounter.plugin.js
@@ -47,11 +47,11 @@ class MemberCounter {
 					OfflineCount = parseInt(OnlineMemberCount?.count) - parseInt(MemberCount)
 				} else {
 					offlineCounter = React.createElement("div", {
-							className: "member-counter-wrapper",
+							className: "member_counter_wrapper",
 							style: { textAlign: "center" },
 						},
 						React.createElement("h1", {
-								className: "member-counter-text offline-member-counter membersGroup__85843 container_de798d",
+								className: "member_counter_text offline_member_counter membersGroup__85843 container_de798d",
 								style: { color: "var(--channels-default)", fontWeight: "bold" },
 							},
 							`🔴 Offline - ` + OfflineCount.toLocaleString()
@@ -62,11 +62,11 @@ class MemberCounter {
 			// Check if Offline Counter is Defined and Set Bottom Margin Accordingly
 			if (offlineCounter != '') {
 				var onlineCounter = React.createElement("div", {
-						className: "member-counter-wrapper",
+						className: "member_counter_wrapper",
 						style: { textAlign: "center", marginBottom: "-10px" },
 					},
 					React.createElement("h1", {
-							className: "member-counter-text online-member-counter membersGroup__85843 container_de798d",
+							className: "member_counter_text online_member_counter membersGroup__85843 container_de798d",
 							style: { color: "var(--channels-default)", fontWeight: "bold" },
 						},
 						`🟢 Online - ` + MemberCount.toLocaleString()
@@ -74,11 +74,11 @@ class MemberCounter {
 				);
 			} else {
 				var onlineCounter = React.createElement("div", {
-						className: "member-counter-wrapper",
+						className: "member_counter_wrapper",
 						style: { textAlign: "center" },
 					},
 					React.createElement("h1", {
-							className: "member-counter-text online-member-counter membersGroup__85843 container_de798d",
+							className: "member_counter_text online_member_counter membersGroup__85843 container_de798d",
 							style: { color: "var(--channels-default)", fontWeight: "bold" },
 						},
 						`🟢 Members - ` + MemberCount.toLocaleString()
@@ -86,11 +86,11 @@ class MemberCounter {
 				);
 			}
 			const dmCounter = React.createElement("div", {
-					className: "member-counter-wrapper",
+					className: "member_counter_wrapper",
 					style: { textAlign: "center", marginTop: "-20px" },
 				},
 				React.createElement("h3", {
-						className: "member-counter-text dm-counter membersGroup__85843 container_de798d",
+						className: "member_counter_text dm_counter membersGroup__85843 container_de798d",
 						style: { color: "var(--channels-default)", fontWeight: "bold" },
 					},
 					`🟢 DMs - ${DMCount?.length.toLocaleString()}`
@@ -100,12 +100,16 @@ class MemberCounter {
 				React.createElement("div", null, onlineCounter, offlineCounter)
 			) : (
 				React.createElement("div", {
-						className: "dmcounter-wrapper",
+						className: "dmcounter_wrapper",
 						style: { textAlign: "center" },
 					},
 					dmCounter
 				)
 			);
+			
+			// Debug Logs
+			//console.log(returnVal)
+			//console.log(returnVal.props.className)
 			
 			// Append Counter Elements | Selects Member List | Selects DM List
 			if (returnVal.props.className.startsWith('members')) {
