@@ -2,7 +2,7 @@
  * @name MemberCounter
  * @author SyndiShanX, imafrogowo
  * @description Displays the Member Count of a Server at the top of the Member List (Can be Styled using .member_counter_wrapper, .member_counter_text, .offline_member_counter, .online_member_counter, and .dm_counter).
- * @version 2.0.7
+ * @version 2.0.8
  * @invite yzYKRKeWNh
  * @source https://github.com/SyndiShanX/Better-Discord-Plugins/blob/main/MemberCounter/
  * @updateUrl https://github.com/SyndiShanX/Better-Discord-Plugins/blob/main/MemberCounter/MemberCounter.plugin.js
@@ -87,7 +87,7 @@ class MemberCounter {
 			}
 			const dmCounter = React.createElement("div", {
 					className: "member_counter_wrapper",
-					style: { textAlign: "center", marginTop: "-20px" },
+					style: { textAlign: "center", marginTop: "-20px", marginBottom: "15px" },
 				},
 				React.createElement("h3", {
 						className: "member_counter_text dm_counter membersGroup__85843 container_de798d",
