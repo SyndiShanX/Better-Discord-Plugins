@@ -93,7 +93,7 @@ class MemberCounter {
 						className: "member_counter_text dm_counter membersGroup__85843 container_de798d",
 						style: { color: "var(--channels-default)", fontWeight: "bold" },
 					},
-					`🟢 DMs - ${DMCount?.length.toLocaleString()}`
+					`DMs - ${DMCount?.length.toLocaleString()}`
 				)
 			);
 			const counterWrapper = MemberCount?.toLocaleString() !== undefined ? (
