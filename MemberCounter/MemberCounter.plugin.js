@@ -1,15 +1,21 @@
 /**
  * @name MemberCounter
  * @author SyndiShanX, imafrogowo
- * @description Displays the Member Count of a Server at the top of the Member List (Can be Styled using .member_counter_wrapper, .member_counter_text, .offline_member_counter, .online_member_counter, and .dm_counter).
- * @version 2.0.8
+ * @description Displays the Member Count of a Server at the top of the Member List (Can be Styled using .member_counter_wrapper, .member_counter_text, .offline_member_counter, .online_member_counter, .dm_counter_wrapper, and .dm_counter).
+ * @version 2.0.9
  * @invite yzYKRKeWNh
  * @source https://github.com/SyndiShanX/Better-Discord-Plugins/blob/main/MemberCounter/
  * @updateUrl https://github.com/SyndiShanX/Better-Discord-Plugins/blob/main/MemberCounter/MemberCounter.plugin.js
  * @website https://syndishanx.github.io/Better-Discord-Plugins/
  */
 
-const { Webpack: {getModule, getStore, Filters}, React, Patcher } = BdApi;
+const { Webpack: {getModule, getStore, Filters}, React, Patcher, Utils } = BdApi;
+
+// Set Default Settings
+const userSettings = {
+	showOfflineCounter: true,
+	showDMsCounter: true
+};
 
 class MemberCounter {
   constructor() {
@@ -20,6 +26,7 @@ class MemberCounter {
 		this.patches.push(Patcher[patchType]('MemberCount', moduleToPatch, functionName, callback));
   }
   start() {
+		Object.assign(userSettings, BdApi.Data.load("MemberCounter", "settings"));
 		// Fetch the MemberList Element using React Filters
 		const MemberList =  getModule(Filters.byKeys('ListThin'));
 		this.addPatch('after', MemberList.ListThin, 'render', (thisObj, [args], returnVal) => {
@@ -46,13 +53,19 @@ class MemberCounter {
 					}
 					OfflineCount = parseInt(OnlineMemberCount?.count) - parseInt(MemberCount)
 				} else {
+					var offlineCounterStyle = {}
+					if (userSettings.showOfflineCounter == false) {
+						offlineCounterStyle = { color: "var(--channels-default)", fontWeight: "bold", display: "none" }
+					} else {
+						offlineCounterStyle = { color: "var(--channels-default)", fontWeight: "bold" }
+					}
 					offlineCounter = React.createElement("div", {
 							className: "member_counter_wrapper",
 							style: { textAlign: "center" },
 						},
 						React.createElement("h1", {
 								className: "member_counter_text offline_member_counter membersGroup__85843 container_de798d",
-								style: { color: "var(--channels-default)", fontWeight: "bold" },
+								style: offlineCounterStyle,
 							},
 							`🔴 Offline - ` + OfflineCount.toLocaleString()
 						)
@@ -60,10 +73,16 @@ class MemberCounter {
 				}
 			}
 			// Check if Offline Counter is Defined and Set Bottom Margin Accordingly
+			var onlineCounterStyle = {}
+			if (userSettings.showOfflineCounter == false) {
+				onlineCounterStyle = { textAlign: "center", marginBottom: "0px" }
+			} else {
+				onlineCounterStyle = { textAlign: "center", marginBottom: "-10px" }
+			}
 			if (offlineCounter != '') {
 				var onlineCounter = React.createElement("div", {
 						className: "member_counter_wrapper",
-						style: { textAlign: "center", marginBottom: "-10px" },
+						style: onlineCounterStyle,
 					},
 					React.createElement("h1", {
 							className: "member_counter_text online_member_counter membersGroup__85843 container_de798d",
@@ -85,13 +104,19 @@ class MemberCounter {
 					)
 				);
 			}
+			var dmCounterStyle = {}
+			if (userSettings.showDMsCounter == false) {
+				dmCounterStyle = { color: "var(--channels-default)", fontWeight: "bold", display: "none" }
+			} else {
+				dmCounterStyle = { color: "var(--channels-default)", fontWeight: "bold" }
+			}
 			const dmCounter = React.createElement("div", {
 					className: "member_counter_wrapper",
 					style: { textAlign: "center", marginTop: "-20px", marginBottom: "15px" },
 				},
 				React.createElement("h3", {
 						className: "member_counter_text dm_counter membersGroup__85843 container_de798d",
-						style: { color: "var(--channels-default)", fontWeight: "bold" },
+						style: dmCounterStyle,
 					},
 					`DMs - ${DMCount?.length.toLocaleString()}`
 				)
@@ -100,7 +125,7 @@ class MemberCounter {
 				React.createElement("div", null, onlineCounter, offlineCounter)
 			) : (
 				React.createElement("div", {
-						className: "dmcounter_wrapper",
+						className: "dm_counter_wrapper",
 						style: { textAlign: "center" },
 					},
 					dmCounter
@@ -108,8 +133,8 @@ class MemberCounter {
 			);
 			
 			// Debug Logs
-			//console.log(returnVal)
-			//console.log(returnVal.props.className)
+			console.log(returnVal)
+			console.log(returnVal.props.className)
 			
 			// Append Counter Elements | Selects Member List | Selects DM List
 			if (returnVal.props.className.startsWith('members')) {
@@ -125,6 +150,56 @@ class MemberCounter {
   }
   stop() {
 		this.patches.forEach((x) => x());
+  }
+	getSettingsPanel() {
+    const settingsPanelWrapper = document.createElement("div");
+    settingsPanelWrapper.style = 'padding-top: 32px;'
+		
+		const Switch = BdApi.Webpack.getByKeys("Switch").Switch;
+		
+		function createSetting(settingDescription, settingKey, switchState) {
+			const settingWrapper = document.createElement("div");
+			settingWrapper.style = 'display: flex; margin-bottom: 8px;'
+			
+			const settingLabel = document.createElement("div");
+			settingLabel.style = 'flex: 1 1 auto;'
+			settingWrapper.append(settingLabel);
+			
+			const settingSwitch = document.createElement("div");
+			settingSwitch.style = 'flex: 0 1 auto;'
+			settingWrapper.append(settingSwitch);
+			
+			settingsPanelWrapper.append(settingWrapper);
+		
+			const offlineMembersLabel = React.createElement("span", {
+				className: "settings_panel_label",
+					style: { color: "white" },
+				},
+				settingDescription
+			)
+			
+			function Settings() {
+				var [ checked, setChecked ] = BdApi.React.useState(switchState);
+			
+				return BdApi.React.createElement(Switch, {
+					checked,
+					onChange(state) {
+						setChecked(state);
+						console.log('Switch Flipped')
+						switchState = !switchState
+						userSettings[settingKey] = switchState;
+						BdApi.Data.save("MemberCounter", "settings", userSettings);
+					}
+				});
+			};
+			BdApi.ReactDOM.render(offlineMembersLabel, settingLabel);
+			BdApi.ReactDOM.render(BdApi.React.createElement(Settings), settingSwitch);
+		}
+		
+		createSetting("Show Offline Members Counter: ", "showOfflineCounter", userSettings.showOfflineCounter)
+		createSetting("Show DMs Counter: ", "showDMsCounter", userSettings.showDMsCounter)
+		
+		return settingsPanelWrapper;
   }
 }
 
