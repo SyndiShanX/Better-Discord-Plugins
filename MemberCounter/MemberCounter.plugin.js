@@ -1,8 +1,8 @@
 /**
  * @name MemberCounter
  * @author SyndiShanX, imafrogowo
- * @description Displays the Member Count of a Server at the top of the Member List (Can be Styled using .member_counter_wrapper, .member_counter_text, .offline_member_counter, .online_member_counter, .dm_counter_wrapper, and .dm_counter).
- * @version 2.0.9
+ * @description Displays the Member Count of a Server at the top of the Member List (Can be Styled using .member_counter_wrapper, .member_counter_text, .offline_member_counter, .online_member_counter, .dm_counter_wrapper, .dm_counter, and .settings_panel_label).
+ * @version 2.10
  * @invite yzYKRKeWNh
  * @source https://github.com/SyndiShanX/Better-Discord-Plugins/blob/main/MemberCounter/
  * @updateUrl https://github.com/SyndiShanX/Better-Discord-Plugins/blob/main/MemberCounter/MemberCounter.plugin.js
@@ -133,8 +133,8 @@ class MemberCounter {
 			);
 			
 			// Debug Logs
-			console.log(returnVal)
-			console.log(returnVal.props.className)
+			//console.log(returnVal)
+			//console.log(returnVal.props.className)
 			
 			// Append Counter Elements | Selects Member List | Selects DM List
 			if (returnVal.props.className.startsWith('members')) {
