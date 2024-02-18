@@ -13,4 +13,5 @@ Displays the Member Count of a Server at the top of the Member List, can be conf
 
 Preview:
 
+
 ![Preview](https://syndishanx.github.io/Better-Discord-Plugins/MemberCounter/Preview.png)
