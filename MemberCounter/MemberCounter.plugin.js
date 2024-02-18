@@ -2,7 +2,7 @@
  * @name MemberCounter
  * @author SyndiShanX, imafrogowo
  * @description Displays the Member Count of a Server at the top of the Member List, can be configured to show Online Members, Offline Members, and a DM Counter.
- * @version 2.10
+ * @version 2.11
  * @invite yzYKRKeWNh
  * @source https://github.com/SyndiShanX/Better-Discord-Plugins/blob/main/MemberCounter/
  * @updateUrl https://github.com/SyndiShanX/Better-Discord-Plugins/blob/main/MemberCounter/MemberCounter.plugin.js
@@ -13,6 +13,7 @@ const { Webpack: {getModule, getStore, Filters}, React, Patcher, Utils } = BdApi
 
 // Set Default Settings
 const userSettings = {
+	showOnlineCounter: true,
 	showOfflineCounter: true,
 	showDMsCounter: true
 };
@@ -72,37 +73,40 @@ class MemberCounter {
 					);
 				}
 			}
-			// Check if Offline Counter is Defined and Set Bottom Margin Accordingly
 			var onlineCounterStyle = {}
-			if (userSettings.showOfflineCounter == false) {
-				onlineCounterStyle = { textAlign: "center", marginBottom: "0px" }
-			} else {
-				onlineCounterStyle = { textAlign: "center", marginBottom: "-10px" }
-			}
-			if (offlineCounter != '') {
-				var onlineCounter = React.createElement("div", {
-						className: "member_counter_wrapper",
-						style: onlineCounterStyle,
-					},
-					React.createElement("h1", {
-							className: "member_counter_text online_member_counter membersGroup__85843 container_de798d",
-							style: { color: "var(--channels-default)", fontWeight: "bold" },
+			// Check if Online Counter is Enabled
+			if (userSettings.showOnlineCounter != false) {
+				// Check if Offline Counter is Defined and Set Bottom Margin Accordingly
+				if (userSettings.showOfflineCounter == false) {
+					onlineCounterStyle = { textAlign: "center", marginBottom: "0px" }
+				} else {
+					onlineCounterStyle = { textAlign: "center", marginBottom: "-10px" }
+				}
+				if (offlineCounter != '') {
+					var onlineCounter = React.createElement("div", {
+							className: "member_counter_wrapper",
+							style: onlineCounterStyle,
 						},
-						`🟢 Online - ` + MemberCount.toLocaleString()
-					)
-				);
-			} else if (MemberCount != null) {
-				var onlineCounter = React.createElement("div", {
-						className: "member_counter_wrapper",
-						style: { textAlign: "center" },
-					},
-					React.createElement("h1", {
-							className: "member_counter_text online_member_counter membersGroup__85843 container_de798d",
-							style: { color: "var(--channels-default)", fontWeight: "bold" },
+						React.createElement("h1", {
+								className: "member_counter_text online_member_counter membersGroup__85843 container_de798d",
+								style: { color: "var(--channels-default)", fontWeight: "bold" },
+							},
+							`🟢 Online - ` + MemberCount.toLocaleString()
+						)
+					);
+				} else if (MemberCount != null) {
+					var onlineCounter = React.createElement("div", {
+							className: "member_counter_wrapper",
+							style: { textAlign: "center" },
 						},
-						`🟢 Members - ` + MemberCount.toLocaleString()
-					)
-				);
+						React.createElement("h1", {
+								className: "member_counter_text online_member_counter membersGroup__85843 container_de798d",
+								style: { color: "var(--channels-default)", fontWeight: "bold" },
+							},
+							`🟢 Members - ` + MemberCount.toLocaleString()
+						)
+					);
+				}
 			}
 			var dmCounterStyle = {}
 			if (userSettings.showDMsCounter == false) {
@@ -196,6 +200,7 @@ class MemberCounter {
 			BdApi.ReactDOM.render(BdApi.React.createElement(Settings), settingSwitch);
 		}
 		
+		createSetting("Show Online Members Counter: ", "showOnlineCounter", userSettings.showOnlineCounter)
 		createSetting("Show Offline Members Counter: ", "showOfflineCounter", userSettings.showOfflineCounter)
 		createSetting("Show DMs Counter: ", "showDMsCounter", userSettings.showDMsCounter)
 		
