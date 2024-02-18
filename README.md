@@ -9,7 +9,7 @@ https://betterdiscord.app/plugin/MemberCount
 
 Filename : `MemberCounter.plugin.js`
 
-Displays the Member Count of a Server at the top of the Member List (Can be Styled using .member-counter-wrapper, .member-counter-text, .offline-member-counter, .online-member-counter, and .dm-counter).
+Displays the Member Count of a Server at the top of the Member List, can be configured to show Online Members, Offline Members, and a DM Counter.
 
 Preview:
 
