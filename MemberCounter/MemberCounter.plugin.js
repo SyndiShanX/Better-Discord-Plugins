@@ -2,7 +2,7 @@
  * @name MemberCounter
  * @author SyndiShanX, imafrogowo
  * @description Displays the Member Count of a Server at the top of the Member List, can be configured to show Online Members, Offline Members, and a DM Counter.
- * @version 2.11
+ * @version 2.12
  * @invite yzYKRKeWNh
  * @source https://github.com/SyndiShanX/Better-Discord-Plugins/blob/main/MemberCounter/
  * @updateUrl https://github.com/SyndiShanX/Better-Discord-Plugins/blob/main/MemberCounter/MemberCounter.plugin.js
@@ -36,14 +36,34 @@ class MemberCounter {
 			const GuildMemberCountStore = getStore('GuildMemberCountStore')
 			const SelectedChannelStore = getStore('SelectedChannelStore')
 			const ChannelStore = getStore('ChannelStore')
-			const { groups } = getStore("ChannelMemberStore").getProps(SelectedGuildStore.getGuildId(), SelectedChannelStore.selectedChannelId);
+			const { groups } = getStore("ChannelMemberStore").getProps(SelectedGuildStore.getGuildId(), SelectedChannelStore.getCurrentlySelectedChannelId());
 			var MemberCount = GuildMemberCountStore.getMemberCount(SelectedGuildStore.getGuildId());
 			const OnlineMemberCount = groups.filter(group => group.id == "online")[0];
 			const DMCount = getStore("PrivateChannelSortStore").getSortedChannels()[1];
+			// Check if Online Counter is undefined, then fetch all Roles and add them together for a Pseudo Count
+			function countRolesasMembers() {
+				OnlineMemberCounted = 0
+				for (let i = 0; i < groups.filter(group => group.id).length; i++) {
+					if ( groups.filter(group => group.id)[i].id != 'offline') {
+						OnlineMemberCounted = OnlineMemberCounted + groups.filter(group => group.id)[i].count
+					}
+				}
+				return OnlineMemberCounted
+			}
+			var OnlineMemberCounted = 0
+			if (OnlineMemberCount == undefined) {
+				OnlineMemberCounted = countRolesasMembers()
+			} else {
+				OnlineMemberCounted = parseInt(OnlineMemberCount?.count)
+			}
+			// Check if Online Count is less than 1% of the Total Members in case some Servers only have Bots witout Roles
+			if (parseInt(OnlineMemberCounted) / MemberCount <= 0.01) {
+				OnlineMemberCounted = countRolesasMembers()
+			}
 			// Check if the Currently Selected Channel is a Thread, Don't Render Offline Counter if True 
 			const currentSelectedChannel = ChannelStore.getChannel(SelectedChannelStore.getChannelId())
-			const ThreadBasedOnlineMembers = currentSelectedChannel?.memberCount || OnlineMemberCount?.count;
-			var OfflineCount = parseInt(MemberCount) - parseInt(OnlineMemberCount?.count)
+			const ThreadBasedOnlineMembers = currentSelectedChannel?.memberCount || OnlineMemberCounted;
+			var OfflineCount = parseInt(MemberCount) - parseInt(OnlineMemberCounted)
 			var offlineCounter = ''
 			if (String(OfflineCount).toLowerCase() != 'nan') {
 				if (currentSelectedChannel?.threadMetadata != undefined) {
@@ -52,7 +72,7 @@ class MemberCounter {
 					} else {
 						MemberCount = currentSelectedChannel.memberCount
 					}
-					OfflineCount = parseInt(OnlineMemberCount?.count) - parseInt(MemberCount)
+					OfflineCount = parseInt(OnlineMemberCounted) - parseInt(MemberCount)
 				} else {
 					var offlineCounterStyle = {}
 					if (userSettings.showOfflineCounter == false) {
