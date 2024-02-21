@@ -2,7 +2,7 @@
  * @name MemberCounter
  * @author SyndiShanX, imafrogowo
  * @description Displays the Member Count of a Server at the top of the Member List, can be configured to show Online Members, Offline Members, and a DM Counter.
- * @version 2.12
+ * @version 2.13
  * @invite yzYKRKeWNh
  * @source https://github.com/SyndiShanX/Better-Discord-Plugins/blob/main/MemberCounter/
  * @updateUrl https://github.com/SyndiShanX/Better-Discord-Plugins/blob/main/MemberCounter/MemberCounter.plugin.js
@@ -111,7 +111,7 @@ class MemberCounter {
 								className: "member_counter_text online_member_counter membersGroup__85843 container_de798d",
 								style: { color: "var(--channels-default)", fontWeight: "bold" },
 							},
-							`🟢 Online - ` + MemberCount.toLocaleString()
+							`🟢 Online - ` + OnlineMemberCounted.toLocaleString()
 						)
 					);
 				} else if (MemberCount != null) {
