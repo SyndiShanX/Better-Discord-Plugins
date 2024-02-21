@@ -1,8 +1,8 @@
 /**
  * @name MemberCounter
  * @author SyndiShanX, imafrogowo
- * @description Displays the Member Count of a Server at the top of the Member List, can be configured to show Online Members, Offline Members, and a DM Counter.
- * @version 2.13
+ * @description Displays the Member Count of a Server at the top of the Member List, can be configured to show Total Members, Online Members, Offline Members, and a DM Counter.
+ * @version 2.14
  * @invite yzYKRKeWNh
  * @source https://github.com/SyndiShanX/Better-Discord-Plugins/blob/main/MemberCounter/
  * @updateUrl https://github.com/SyndiShanX/Better-Discord-Plugins/blob/main/MemberCounter/MemberCounter.plugin.js
@@ -13,6 +13,7 @@ const { Webpack: {getModule, getStore, Filters}, React, Patcher, Utils } = BdApi
 
 // Set Default Settings
 const userSettings = {
+	showTotalCounter: true,
 	showOnlineCounter: true,
 	showOfflineCounter: true,
 	showDMsCounter: true
@@ -93,6 +94,27 @@ class MemberCounter {
 					);
 				}
 			}
+			var totalCounterStyle = {}
+			// Check if Total Counter is Enabled
+			if (userSettings.showTotalCounter != false) {
+				// Check if Offline Counter is Defined and Set Bottom Margin Accordingly
+				if (userSettings.showOnlineCounter == false && userSettings.showOfflineCounter == false) {
+					totalCounterStyle = { textAlign: "center", marginBottom: "0px" }
+				} else {
+					totalCounterStyle = { textAlign: "center", marginBottom: "-10px" }
+				}
+				var totalCounter = React.createElement("div", {
+						className: "member_counter_wrapper",
+						style: totalCounterStyle,
+					},
+					React.createElement("h1", {
+							className: "member_counter_text total_member_counter membersGroup__85843 container_de798d",
+							style: { color: "var(--channels-default)", fontWeight: "bold" },
+						},
+						`🔵 Total Members - ` + MemberCount.toLocaleString()
+					)
+				);
+			}
 			var onlineCounterStyle = {}
 			// Check if Online Counter is Enabled
 			if (userSettings.showOnlineCounter != false) {
@@ -146,7 +168,7 @@ class MemberCounter {
 				)
 			);
 			const counterWrapper = MemberCount?.toLocaleString() !== undefined ? (
-				React.createElement("div", null, onlineCounter, offlineCounter)
+				React.createElement("div", null, totalCounter, onlineCounter, offlineCounter)
 			) : (
 				React.createElement("div", {
 						className: "dm_counter_wrapper",
@@ -195,7 +217,7 @@ class MemberCounter {
 			
 			settingsPanelWrapper.append(settingWrapper);
 		
-			const offlineMembersLabel = React.createElement("span", {
+			const settingsPanelLabel = React.createElement("span", {
 				className: "settings_panel_label",
 					style: { color: "white" },
 				},
@@ -209,17 +231,18 @@ class MemberCounter {
 					checked,
 					onChange(state) {
 						setChecked(state);
-						console.log('Switch Flipped')
+						//console.log('Switch Flipped')
 						switchState = !switchState
 						userSettings[settingKey] = switchState;
 						BdApi.Data.save("MemberCounter", "settings", userSettings);
 					}
 				});
 			};
-			BdApi.ReactDOM.render(offlineMembersLabel, settingLabel);
+			BdApi.ReactDOM.render(settingsPanelLabel, settingLabel);
 			BdApi.ReactDOM.render(BdApi.React.createElement(Settings), settingSwitch);
 		}
 		
+		createSetting("Show Total Members Counter: ", "showTotalCounter", userSettings.showTotalCounter)
 		createSetting("Show Online Members Counter: ", "showOnlineCounter", userSettings.showOnlineCounter)
 		createSetting("Show Offline Members Counter: ", "showOfflineCounter", userSettings.showOfflineCounter)
 		createSetting("Show DMs Counter: ", "showDMsCounter", userSettings.showDMsCounter)
