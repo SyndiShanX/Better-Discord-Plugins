@@ -2,7 +2,7 @@
  * @name MemberCounter
  * @author SyndiShanX, imafrogowo
  * @description Displays the Member Count of a Server at the top of the Member List, can be configured to show Total Members, Online Members, Offline Members, and a DM Counter.
- * @version 2.14
+ * @version 2.15
  * @invite yzYKRKeWNh
  * @source https://github.com/SyndiShanX/Better-Discord-Plugins/blob/main/MemberCounter/
  * @updateUrl https://github.com/SyndiShanX/Better-Discord-Plugins/blob/main/MemberCounter/MemberCounter.plugin.js
@@ -43,57 +43,61 @@ class MemberCounter {
 			const DMCount = getStore("PrivateChannelSortStore").getSortedChannels()[1];
 			// Check if Online Counter is undefined, then fetch all Roles and add them together for a Pseudo Count
 			function countRolesasMembers() {
-				OnlineMemberCounted = 0
+				OnlineMembersCounted = 0
 				for (let i = 0; i < groups.filter(group => group.id).length; i++) {
 					if ( groups.filter(group => group.id)[i].id != 'offline') {
-						OnlineMemberCounted = OnlineMemberCounted + groups.filter(group => group.id)[i].count
+						OnlineMembersCounted = OnlineMembersCounted + groups.filter(group => group.id)[i].count
 					}
 				}
-				return OnlineMemberCounted
+				return OnlineMembersCounted
 			}
-			var OnlineMemberCounted = 0
+			var OnlineMembersCounted = 0
 			if (OnlineMemberCount == undefined) {
-				OnlineMemberCounted = countRolesasMembers()
+				OnlineMembersCounted = countRolesasMembers()
 			} else {
-				OnlineMemberCounted = parseInt(OnlineMemberCount?.count)
+				OnlineMembersCounted = parseInt(OnlineMemberCount?.count)
 			}
 			// Check if Online Count is less than 1% of the Total Members in case some Servers only have Bots witout Roles
-			if (parseInt(OnlineMemberCounted) / MemberCount <= 0.01) {
-				OnlineMemberCounted = countRolesasMembers()
+			if (parseInt(OnlineMembersCounted) / MemberCount <= 0.01) {
+				OnlineMembersCounted = countRolesasMembers()
 			}
 			// Check if the Currently Selected Channel is a Thread, Don't Render Offline Counter if True 
-			const currentSelectedChannel = ChannelStore.getChannel(SelectedChannelStore.getChannelId())
-			const ThreadBasedOnlineMembers = currentSelectedChannel?.memberCount || OnlineMemberCounted;
-			var OfflineCount = parseInt(MemberCount) - parseInt(OnlineMemberCounted)
+			var OfflineCount = parseInt(MemberCount) - parseInt(OnlineMembersCounted)
 			var offlineCounter = ''
 			if (String(OfflineCount).toLowerCase() != 'nan') {
-				if (currentSelectedChannel?.threadMetadata != undefined) {
-					if (currentSelectedChannel.memberCount == 50) {
-						MemberCount = '50+'
-					} else {
-						MemberCount = currentSelectedChannel.memberCount
+				if (ChannelStore.getChannel(SelectedChannelStore.getChannelId()).threadMetadata != undefined) {
+					const threadMembers = Object.entries(getStore("ThreadMemberListStore").getMemberListSections(SelectedChannelStore.getCurrentlySelectedChannelId()))
+					var OnlineThreadMembersCounted = 0
+					var OfflineThreadMembersCounted = 0
+					// Fetch all Roles in the current Thread Channel and add them together for a Pseudo Count
+					for (let i = 0; i < threadMembers.length; i++) {
+						if ( threadMembers[i][0] != 'offline') {
+							OnlineThreadMembersCounted = OnlineThreadMembersCounted + threadMembers[i][1]['userIds'].length
+						} else {
+							OfflineThreadMembersCounted = OfflineThreadMembersCounted + threadMembers[i][1]['userIds'].length
+						}
 					}
-					OfflineCount = parseInt(OnlineMemberCounted) - parseInt(MemberCount)
-				} else {
-					var offlineCounterStyle = {}
-					if (userSettings.showOfflineCounter == false) {
-						offlineCounterStyle = { color: "var(--channels-default)", fontWeight: "bold", display: "none" }
-					} else {
-						offlineCounterStyle = { color: "var(--channels-default)", fontWeight: "bold" }
-					}
-					offlineCounter = React.createElement("div", {
-							className: "member_counter_wrapper",
-							style: { textAlign: "center" },
-						},
-						React.createElement("h1", {
-								className: "member_counter_text offline_member_counter membersGroup__85843 container_de798d",
-								style: offlineCounterStyle,
-							},
-							`🔴 Offline - ` + OfflineCount.toLocaleString()
-						)
-					);
+					MemberCount = OnlineThreadMembersCounted + OfflineThreadMembersCounted
+					OfflineCount = parseInt(OfflineThreadMembersCounted)
 				}
 			}
+			var offlineCounterStyle = {}
+			if (userSettings.showOfflineCounter == false) {
+				offlineCounterStyle = { color: "var(--channels-default)", fontWeight: "bold", display: "none" }
+			} else {
+				offlineCounterStyle = { color: "var(--channels-default)", fontWeight: "bold" }
+			}
+			offlineCounter = React.createElement("div", {
+					className: "member_counter_wrapper",
+					style: { textAlign: "center" },
+				},
+				React.createElement("h1", {
+						className: "member_counter_text offline_member_counter membersGroup__85843 container_de798d",
+						style: offlineCounterStyle,
+					},
+					`🔴 Offline - ` + OfflineCount.toLocaleString()
+				)
+			);
 			var totalCounterStyle = {}
 			// Check if Total Counter is Enabled
 			if (userSettings.showTotalCounter != false) {
@@ -125,6 +129,12 @@ class MemberCounter {
 					onlineCounterStyle = { textAlign: "center", marginBottom: "-10px" }
 				}
 				if (offlineCounter != '') {
+					var OnlineMembersFinal = ''
+					if (OnlineThreadMembersCounted != undefined) {
+						OnlineMembersFinal = OnlineThreadMembersCounted.toLocaleString()
+					} else {
+						OnlineMembersFinal = OnlineMembersCounted.toLocaleString()
+					}
 					var onlineCounter = React.createElement("div", {
 							className: "member_counter_wrapper",
 							style: onlineCounterStyle,
@@ -133,7 +143,7 @@ class MemberCounter {
 								className: "member_counter_text online_member_counter membersGroup__85843 container_de798d",
 								style: { color: "var(--channels-default)", fontWeight: "bold" },
 							},
-							`🟢 Online - ` + OnlineMemberCounted.toLocaleString()
+							`🟢 Online - ` + OnlineMembersFinal
 						)
 					);
 				} else if (MemberCount != null) {
