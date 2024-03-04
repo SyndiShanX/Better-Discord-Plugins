@@ -2,7 +2,7 @@
  * @name MemberCounter
  * @author SyndiShanX, imafrogowo
  * @description Displays the Member Count of a Server at the top of the Member List, can be configured to show Total Members, Online Members, Offline Members, and a DM Counter.
- * @version 2.15
+ * @version 2.16
  * @invite yzYKRKeWNh
  * @source https://github.com/SyndiShanX/Better-Discord-Plugins/blob/main/MemberCounter/
  * @updateUrl https://github.com/SyndiShanX/Better-Discord-Plugins/blob/main/MemberCounter/MemberCounter.plugin.js
@@ -101,23 +101,26 @@ class MemberCounter {
 			var totalCounterStyle = {}
 			// Check if Total Counter is Enabled
 			if (userSettings.showTotalCounter != false) {
-				// Check if Offline Counter is Defined and Set Bottom Margin Accordingly
-				if (userSettings.showOnlineCounter == false && userSettings.showOfflineCounter == false) {
-					totalCounterStyle = { textAlign: "center", marginBottom: "0px" }
-				} else {
-					totalCounterStyle = { textAlign: "center", marginBottom: "-10px" }
-				}
-				var totalCounter = React.createElement("div", {
-						className: "member_counter_wrapper",
-						style: totalCounterStyle,
-					},
-					React.createElement("h1", {
-							className: "member_counter_text total_member_counter membersGroup__85843 container_de798d",
-							style: { color: "var(--channels-default)", fontWeight: "bold" },
+				// Check if MemberCount is Defined and Set Bottom Margin Accordingly
+				if (MemberCount != undefined) {
+					// Check if Offline Counter is Defined and Set Bottom Margin Accordingly
+					if (userSettings.showOnlineCounter == false && userSettings.showOfflineCounter == false) {
+						totalCounterStyle = { textAlign: "center", marginBottom: "0px" }
+					} else {
+						totalCounterStyle = { textAlign: "center", marginBottom: "-10px" }
+					}
+					var totalCounter = React.createElement("div", {
+							className: "member_counter_wrapper",
+							style: totalCounterStyle,
 						},
-						`🔵 Total Members - ` + MemberCount.toLocaleString()
-					)
-				);
+						React.createElement("h1", {
+								className: "member_counter_text total_member_counter membersGroup__85843 container_de798d",
+								style: { color: "var(--channels-default)", fontWeight: "bold" },
+							},
+							`🔵 Total Members - ` + MemberCount.toLocaleString()
+						)
+					);
+				}
 			}
 			var onlineCounterStyle = {}
 			// Check if Online Counter is Enabled
