@@ -2,7 +2,7 @@
  * @name MemberCounter
  * @author SyndiShanX, imafrogowo
  * @description Displays the Member Count of a Server at the top of the Member List, can be configured to show Total Members, Online Members, Offline Members, and a DM Counter.
- * @version 2.17
+ * @version 2.18
  * @invite yzYKRKeWNh
  * @source https://github.com/SyndiShanX/Better-Discord-Plugins/blob/main/MemberCounter/
  * @website https://syndishanx.github.io/Better-Discord-Plugins/
@@ -213,7 +213,7 @@ class MemberCounter {
     const settingsPanelWrapper = document.createElement("div");
     settingsPanelWrapper.style = 'padding-top: 32px;'
 		
-		const Switch = BdApi.Webpack.getByKeys("Switch").Switch;
+		const Switch = BdApi.Webpack.getByKeys("Switch", "Button").Switch;
 		
 		function createSetting(settingDescription, settingKey, switchState) {
 			const settingWrapper = document.createElement("div");
