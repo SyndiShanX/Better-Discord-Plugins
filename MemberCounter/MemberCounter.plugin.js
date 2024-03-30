@@ -2,10 +2,9 @@
  * @name MemberCounter
  * @author SyndiShanX, imafrogowo
  * @description Displays the Member Count of a Server at the top of the Member List, can be configured to show Total Members, Online Members, Offline Members, and a DM Counter.
- * @version 2.16
+ * @version 2.17
  * @invite yzYKRKeWNh
  * @source https://github.com/SyndiShanX/Better-Discord-Plugins/blob/main/MemberCounter/
- * @updateUrl https://github.com/SyndiShanX/Better-Discord-Plugins/blob/main/MemberCounter/MemberCounter.plugin.js
  * @website https://syndishanx.github.io/Better-Discord-Plugins/
  */
 
@@ -83,16 +82,16 @@ class MemberCounter {
 			}
 			var offlineCounterStyle = {}
 			if (userSettings.showOfflineCounter == false) {
-				offlineCounterStyle = { color: "var(--channels-default)", fontWeight: "bold", display: "none" }
+				offlineCounterStyle = { color: "var(--channels-default)", fontWeight: "bold", display: "none", padding: "24px 8px 0 16px", height: "40px", boxSizing: "border-box", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden", textTransform: "uppercase", fontSize: "12px", lineHeight: "16px", letterSpacing: ".02em", fontFamily: "var(--font-display)", fontWeight: "600", flex: "1 1 auto", color: "var(--channels-default)" }
 			} else {
-				offlineCounterStyle = { color: "var(--channels-default)", fontWeight: "bold" }
+				offlineCounterStyle = { color: "var(--channels-default)", fontWeight: "bold", padding: "24px 8px 0 16px", height: "40px", boxSizing: "border-box", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden", textTransform: "uppercase", fontSize: "12px", lineHeight: "16px", letterSpacing: ".02em", fontFamily: "var(--font-display)", fontWeight: "600", flex: "1 1 auto", color: "var(--channels-default)" }
 			}
 			offlineCounter = React.createElement("div", {
 					className: "member_counter_wrapper",
 					style: { textAlign: "center" },
 				},
 				React.createElement("h1", {
-						className: "member_counter_text offline_member_counter membersGroup__85843 container_de798d",
+						className: "member_counter_text offline_member_counter",
 						style: offlineCounterStyle,
 					},
 					`🔴 Offline - ` + OfflineCount.toLocaleString()
@@ -114,8 +113,8 @@ class MemberCounter {
 							style: totalCounterStyle,
 						},
 						React.createElement("h1", {
-								className: "member_counter_text total_member_counter membersGroup__85843 container_de798d",
-								style: { color: "var(--channels-default)", fontWeight: "bold" },
+								className: "member_counter_text total_member_counter",
+								style: { color: "var(--channels-default)", fontWeight: "bold", padding: "24px 8px 0 16px", height: "40px", boxSizing: "border-box", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden", textTransform: "uppercase", fontSize: "12px", lineHeight: "16px", letterSpacing: ".02em", fontFamily: "var(--font-display)", fontWeight: "600", flex: "1 1 auto", color: "var(--channels-default)" },
 							},
 							`🔵 Total Members - ` + MemberCount.toLocaleString()
 						)
@@ -143,8 +142,8 @@ class MemberCounter {
 							style: onlineCounterStyle,
 						},
 						React.createElement("h1", {
-								className: "member_counter_text online_member_counter membersGroup__85843 container_de798d",
-								style: { color: "var(--channels-default)", fontWeight: "bold" },
+								className: "member_counter_text online_member_counter",
+								style: { color: "var(--channels-default)", fontWeight: "bold", padding: "24px 8px 0 16px", height: "40px", boxSizing: "border-box", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden", textTransform: "uppercase", fontSize: "12px", lineHeight: "16px", letterSpacing: ".02em", fontFamily: "var(--font-display)", fontWeight: "600", flex: "1 1 auto", color: "var(--channels-default)" },
 							},
 							`🟢 Online - ` + OnlineMembersFinal
 						)
@@ -155,8 +154,8 @@ class MemberCounter {
 							style: { textAlign: "center" },
 						},
 						React.createElement("h1", {
-								className: "member_counter_text online_member_counter membersGroup__85843 container_de798d",
-								style: { color: "var(--channels-default)", fontWeight: "bold" },
+								className: "member_counter_text online_member_counter",
+								style: { color: "var(--channels-default)", fontWeight: "bold", padding: "24px 8px 0 16px", height: "40px", boxSizing: "border-box", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden", textTransform: "uppercase", fontSize: "12px", lineHeight: "16px", letterSpacing: ".02em", fontFamily: "var(--font-display)", fontWeight: "600", flex: "1 1 auto", color: "var(--channels-default)" },
 							},
 							`🟢 Members - ` + MemberCount.toLocaleString()
 						)
@@ -165,16 +164,16 @@ class MemberCounter {
 			}
 			var dmCounterStyle = {}
 			if (userSettings.showDMsCounter == false) {
-				dmCounterStyle = { color: "var(--channels-default)", fontWeight: "bold", display: "none" }
+				dmCounterStyle = { color: "var(--channels-default)", fontWeight: "bold", display: "none", padding: "24px 8px 0 16px", height: "40px", boxSizing: "border-box", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden", textTransform: "uppercase", fontSize: "12px", lineHeight: "16px", letterSpacing: ".02em", fontFamily: "var(--font-display)", fontWeight: "600", flex: "1 1 auto", color: "var(--channels-default)" }
 			} else {
-				dmCounterStyle = { color: "var(--channels-default)", fontWeight: "bold" }
+				dmCounterStyle = { color: "var(--channels-default)", fontWeight: "bold", padding: "24px 8px 0 16px", height: "40px", boxSizing: "border-box", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden", textTransform: "uppercase", fontSize: "12px", lineHeight: "16px", letterSpacing: ".02em", fontFamily: "var(--font-display)", fontWeight: "600", flex: "1 1 auto", color: "var(--channels-default)" }
 			}
 			const dmCounter = React.createElement("div", {
 					className: "member_counter_wrapper",
 					style: { textAlign: "center", marginTop: "-20px", marginBottom: "15px" },
 				},
 				React.createElement("h3", {
-						className: "member_counter_text dm_counter membersGroup__85843 container_de798d",
+						className: "member_counter_text dm_counter",
 						style: dmCounterStyle,
 					},
 					`DMs - ${DMCount?.length.toLocaleString()}`
