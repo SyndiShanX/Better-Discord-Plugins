@@ -2,7 +2,7 @@
  * @name MemberCounter
  * @author SyndiShanX, imafrogowo
  * @description Displays the Member Count of a Server at the top of the Member List, can be configured to show Total Members, Online Members, Offline Members, and a DM Counter.
- * @version 2.20
+ * @version 2.21
  * @invite yzYKRKeWNh
  * @source https://github.com/SyndiShanX/Better-Discord-Plugins/blob/main/MemberCounter/
  * @website https://syndishanx.github.io/Better-Discord-Plugins/
@@ -41,11 +41,9 @@ class MemberCounter {
 			const DMCount = getStore("PrivateChannelSortStore").getSortedChannels()[1];
 			// Fetch all Roles and add them together for a Pseudo Count
 			var OnlineMembersCounted = 0
-			while (OnlineMembersCounted <= 0) {
-				for (let i = 0; i < groups.filter(group => group.id).length; i++) {
-					if ( groups.filter(group => group.id)[i].id != 'offline') {
-						OnlineMembersCounted = OnlineMembersCounted + groups.filter(group => group.id)[i].count
-					}
+			for (let i = 0; i < groups.filter(group => group.id).length; i++) {
+				if ( groups.filter(group => group.id)[i].id != 'offline') {
+					OnlineMembersCounted = OnlineMembersCounted + groups.filter(group => group.id)[i].count
 				}
 			}
 			// Check if the Currently Selected Channel is a Thread, Don't Render Offline Counter if True 
