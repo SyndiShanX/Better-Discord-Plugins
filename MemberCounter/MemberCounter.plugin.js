@@ -2,13 +2,13 @@
  * @name MemberCounter
  * @author SyndiShanX, imafrogowo
  * @description Displays the Member Count of a Server at the top of the Member List, can be configured to show Total Members, Online Members, Offline Members, and a DM Counter.
- * @version 2.25
+ * @version 2.26
  * @invite yzYKRKeWNh
  * @source https://github.com/SyndiShanX/Better-Discord-Plugins/blob/main/MemberCounter/
  * @website https://syndishanx.github.io/Better-Discord-Plugins/
  */
 
-const { Webpack: {getModule, getStore, Filters}, React, Patcher, Utils } = BdApi;
+const { Webpack: {getModule, getStore, modules}, React, Patcher, Utils } = BdApi;
 
 // Set Default Settings
 const userSettings = {
@@ -28,9 +28,17 @@ class MemberCounter {
   }
   start() {
 		Object.assign(userSettings, BdApi.Data.load("MemberCounter", "settings"));
-		// Fetch the MemberList Element using React Filters
-		const MemberList = getModule(Filters.byKeys('ListThin'));
-		this.addPatch('after', MemberList.ListThin, 'render', (thisObj, [args], returnVal) => {
+		// Fetch the MemberList Element
+		let id;
+		const scrollers = getModule((e, m) => {
+			if (modules[m.id].toString().includes(".customTheme,null")) {
+				return id = m.id;
+			}
+		});
+		let ListThinKey = modules[id].toString().match(/(.{1,3}?):\(\)=>(.{1,3}?)(?:}|,).+(?:,|\s)\2=\(0,.{1,3}\..{1,3}\)\((.{1,3})\.thin,\3\.fade,\3\.customTheme,/)[1];
+		if (ListThinKey[0] === "{" || ListThinKey[0] === ",") ListThinKey = ListThinKey.slice(1);
+		const MemberList = scrollers[ListThinKey];
+		this.addPatch('after', MemberList, 'render', (thisObj, [args], returnVal) => {
 			// Fetch the Various Stores and Member Counts using BdApi
 			const SelectedGuildStore = getStore('SelectedGuildStore')
 			const GuildMemberCountStore = getStore('GuildMemberCountStore')
@@ -198,62 +206,47 @@ class MemberCounter {
 		this.patches.forEach((x) => x());
   }
 	getSettingsPanel() {
-    const settingsPanelWrapper = document.createElement("div");
-    settingsPanelWrapper.style = 'padding-top: 32px;'
-		
-		const settingsDivider = document.createElement("div");
-    settingsDivider.className = 'bd-setting-divider'
-    settingsDivider.style = 'position: relative; top: -2em;'
-		
-		settingsPanelWrapper.append(settingsDivider);
-		
-		const Switch = BdApi.Webpack.getByKeys("Switch", "Button").Switch;
-		
-		function createSetting(settingDescription, settingKey, switchState) {
-			const settingWrapper = document.createElement("div");
-			settingWrapper.style = 'display: flex; margin-bottom: 8px;'
-			
-			const settingLabel = document.createElement("div");
-			settingLabel.style = 'flex: 1 1 auto;'
-			settingWrapper.append(settingLabel);
-			
-			const settingSwitch = document.createElement("div");
-			settingSwitch.style = 'flex: 0 1 auto;'
-			settingWrapper.append(settingSwitch);
-			
-			settingsPanelWrapper.append(settingWrapper);
-		
-			const settingsPanelLabel = React.createElement("span", {
-				className: "settings_panel_label",
-					style: { color: "white" },
-				},
-				settingDescription
-			)
-			
-			function Settings() {
-				var [ checked, setChecked ] = BdApi.React.useState(switchState);
-			
-				return BdApi.React.createElement(Switch, {
-					checked,
-					onChange(state) {
-						setChecked(state);
-						//console.log('Switch Flipped')
-						switchState = !switchState
-						userSettings[settingKey] = switchState;
-						BdApi.Data.save("MemberCounter", "settings", userSettings);
+		return BdApi.UI.buildSettingsPanel({
+			settings: [
+				{
+					type: "switch",
+					id: "switch",
+					name: "Show Total Members Counter: ",
+					value: userSettings["showTotalCounter"],
+					onChange: (value) => {
+						userSettings["showTotalCounter"] = value;
 					}
-				});
-			};
-			BdApi.ReactDOM.render(settingsPanelLabel, settingLabel);
-			BdApi.ReactDOM.render(BdApi.React.createElement(Settings), settingSwitch);
-		}
-		
-		createSetting("Show Total Members Counter: ", "showTotalCounter", userSettings.showTotalCounter)
-		createSetting("Show Online Members Counter: ", "showOnlineCounter", userSettings.showOnlineCounter)
-		createSetting("Show Offline Members Counter: ", "showOfflineCounter", userSettings.showOfflineCounter)
-		createSetting("Show DMs Counter: ", "showDMsCounter", userSettings.showDMsCounter)
-		
-		return settingsPanelWrapper;
+				},
+				{
+					type: "switch",
+					id: "switch",
+					name: "Show Online Members Counter: ",
+					value: userSettings["showOnlineCounter"],
+					onChange: (value) => {
+						userSettings["showOnlineCounter"] = value;
+					}
+				},
+				{
+					type: "switch",
+					id: "switch",
+					name: "Show Offline Members Counter: ",
+					value: userSettings["showOfflineCounter"],
+					onChange: (value) => {
+						userSettings["showOfflineCounter"] = value;
+					}
+				},
+				{
+					type: "switch",
+					id: "switch",
+					name: "Show DMs Counter: ",
+					value: userSettings["showDMsCounter"],
+					onChange: (value) => {
+						userSettings["showDMsCounter"] = value;
+					}
+				}
+			],
+			onChange: (category, id, value) => BdApi.Data.save("MemberCounter", "settings", userSettings),
+		});
   }
 }
 
