@@ -2,13 +2,14 @@
  * @name MemberCounter
  * @author SyndiShanX, imafrogowo
  * @description Displays the Member Count of a Server at the top of the Member List, can be configured to show Total Members, Online Members, Offline Members, and a DM Counter.
- * @version 2.26
+ * @version 2.27
  * @invite yzYKRKeWNh
  * @source https://github.com/SyndiShanX/Better-Discord-Plugins/blob/main/MemberCounter/
  * @website https://syndishanx.github.io/Better-Discord-Plugins/
  */
 
-const { Webpack: {getModule, getStore, modules}, React, Patcher, Utils } = BdApi;
+const { Webpack: {Filters, getModule, getStore, modules}, React, Patcher, Utils } = BdApi;
+//const { Filters } = Webpack;
 
 // Set Default Settings
 const userSettings = {
@@ -29,15 +30,14 @@ class MemberCounter {
   start() {
 		Object.assign(userSettings, BdApi.Data.load("MemberCounter", "settings"));
 		// Fetch the MemberList Element
-		let id;
-		const scrollers = getModule((e, m) => {
-			if (modules[m.id].toString().includes(".customTheme,null")) {
-				return id = m.id;
-			}
-		});
-		let ListThinKey = modules[id].toString().match(/(.{1,3}?):\(\)=>(.{1,3}?)(?:}|,).+(?:,|\s)\2=\(0,.{1,3}\..{1,3}\)\((.{1,3})\.thin,\3\.fade,\3\.customTheme,/)[1];
-		if (ListThinKey[0] === "{" || ListThinKey[0] === ",") ListThinKey = ListThinKey.slice(1);
-		const MemberList = scrollers[ListThinKey];
+		const MemberList = (() => {
+			const { id, exports } = getModule(Filters.bySource('thin', 'none', 'fade', 'ResizeObserver'), { raw: true })
+			const source = modules[id].toString()
+			return exports[
+				source.match(new RegExp(`(\\w+):\\(\\)=>${source.match(/let (\w+)=/)[1]}`))[1]
+			]
+		})()
+		
 		this.addPatch('after', MemberList, 'render', (thisObj, [args], returnVal) => {
 			// Fetch the Various Stores and Member Counts using BdApi
 			const SelectedGuildStore = getStore('SelectedGuildStore')
