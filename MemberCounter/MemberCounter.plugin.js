@@ -2,14 +2,14 @@
  * @name MemberCounter
  * @author SyndiShanX, imafrogowo
  * @description Displays the Member Count of a Server at the top of the Member List, can be configured to show Total Members, Online Members, Offline Members, and a DM Counter.
- * @version 2.27
+ * @version 2.28
  * @invite yzYKRKeWNh
  * @source https://github.com/SyndiShanX/Better-Discord-Plugins/blob/main/MemberCounter/
  * @website https://syndishanx.github.io/Better-Discord-Plugins/
  */
 
-const { Webpack: {Filters, getModule, getStore, modules}, React, Patcher, Utils } = BdApi;
-//const { Filters } = Webpack;
+const { Webpack: {Filters, getModule, modules, Stores}, React, Patcher, Utils } = BdApi;
+const { SelectedGuildStore, GuildMemberCountStore, SelectedChannelStore, ChannelStore, ChannelMemberStore, PrivateChannelSortStore, ThreadMemberListStore } = Stores;
 
 // Set Default Settings
 const userSettings = {
@@ -40,13 +40,9 @@ class MemberCounter {
 		
 		this.addPatch('after', MemberList, 'render', (thisObj, [args], returnVal) => {
 			// Fetch the Various Stores and Member Counts using BdApi
-			const SelectedGuildStore = getStore('SelectedGuildStore')
-			const GuildMemberCountStore = getStore('GuildMemberCountStore')
-			const SelectedChannelStore = getStore('SelectedChannelStore')
-			const ChannelStore = getStore('ChannelStore')
-			const { groups } = getStore("ChannelMemberStore").getProps(SelectedGuildStore.getGuildId(), SelectedChannelStore.getCurrentlySelectedChannelId());
+			const { groups } = ChannelMemberStore.getProps(SelectedGuildStore.getGuildId(), SelectedChannelStore.getCurrentlySelectedChannelId());
 			var MemberCount = GuildMemberCountStore.getMemberCount(SelectedGuildStore.getGuildId());
-			const DMCount = getStore("PrivateChannelSortStore").getSortedChannels()[1];
+			const DMCount = PrivateChannelSortStore.getSortedChannels()[1];
 			// Fetch all Roles and add them together for a Pseudo Count
 			var OnlineMembersCounted = 0
 			for (let i = 0; i < groups.filter(group => group.id).length; i++) {
@@ -59,7 +55,7 @@ class MemberCounter {
 			var offlineCounter = ''
 			if (String(OfflineCount).toLowerCase() != 'nan') {
 				if (ChannelStore.getChannel(SelectedChannelStore.getChannelId()).threadMetadata != undefined) {
-					const threadMembers = Object.entries(getStore("ThreadMemberListStore").getMemberListSections(SelectedChannelStore.getCurrentlySelectedChannelId()))
+					const threadMembers = Object.entries(ThreadMemberListStore.getMemberListSections(SelectedChannelStore.getCurrentlySelectedChannelId()))
 					var OnlineThreadMembersCounted = 0
 					var OfflineThreadMembersCounted = 0
 					// Fetch all Roles in the current Thread Channel and add them together for a Pseudo Count
