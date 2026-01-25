@@ -2,13 +2,13 @@
  * @name MemberCounter
  * @author SyndiShanX, imafrogowo
  * @description Displays the Member Count of a Server at the top of the Member List, can be configured to show Total Members, Online Members, Offline Members, and a DM Counter.
- * @version 2.29
+ * @version 2.30
  * @invite yzYKRKeWNh
  * @source https://github.com/SyndiShanX/Better-Discord-Plugins/blob/main/MemberCounter/
  * @website https://syndishanx.github.io/Better-Discord-Plugins/
  */
 
-const { Webpack: {Filters, getModule, modules, Stores}, React, Patcher, Utils } = BdApi;
+const { Webpack: {Filters, getByKeys, getModule, modules, Stores}, React, Patcher, Utils } = BdApi;
 const { SelectedGuildStore, GuildMemberCountStore, SelectedChannelStore, ChannelStore, ChannelMemberStore, PrivateChannelSortStore, ThreadMemberListStore } = Stores;
 
 // Set Default Settings
@@ -30,13 +30,8 @@ class MemberCounter {
   start() {
 		Object.assign(userSettings, BdApi.Data.load("MemberCounter", "settings"));
 		// Fetch the MemberList Element
-		const MemberList = (() => {
-			const { id, exports } = getModule(Filters.bySource('thin', 'none', 'fade', 'ResizeObserver'), { raw: true })
-			const source = modules[id].toString()
-			return exports[
-				source.match(new RegExp(`(\\w+):\\(\\)=>${source.match(/let (\w+)=/)[1]}`))[1]
-			]
-		})()
+		const Bulk = getByKeys('createToast', 'popToast');
+		const MemberList = Utils.findInTree(Bulk, (m) => Filters.byStrings('renderSection:', 'renderListHeader:')(m?.render));
 		
 		this.addPatch('after', MemberList, 'render', (thisObj, [args], returnVal) => {
 			// Fetch the Various Stores and Member Counts using BdApi
@@ -185,7 +180,7 @@ class MemberCounter {
 			//console.log(returnVal.props.className)
 			
 			// Append Counter Elements | Selects Member List | Selects DM List
-			if (returnVal.props.className.split(' ')[0].endsWith('-members')) {
+			if (returnVal.props.className.split(' ')[0].startsWith('members')) {
 				const children = returnVal.props.children;
 				children.splice(0, 0, counterWrapper);
 				returnVal.props.children = children;
