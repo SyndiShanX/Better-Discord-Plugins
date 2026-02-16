@@ -2,7 +2,7 @@
  * @name MemberCounter
  * @author SyndiShanX, imafrogowo
  * @description Displays the Member Count of a Server at the top of the Member List, can be configured to show Total Members, Online Members, Offline Members, and a DM Counter.
- * @version 2.30
+ * @version 2.31
  * @invite yzYKRKeWNh
  * @source https://github.com/SyndiShanX/Better-Discord-Plugins/blob/main/MemberCounter/
  * @website https://syndishanx.github.io/Better-Discord-Plugins/
@@ -16,7 +16,8 @@ const userSettings = {
 	showTotalCounter: true,
 	showOnlineCounter: true,
 	showOfflineCounter: true,
-	showDMsCounter: true
+	showDMsCounter: true,
+	isAlwaysOnTop: true
 };
 
 class MemberCounter {
@@ -67,12 +68,12 @@ class MemberCounter {
 			}
 			var offlineCounterStyle = {}
 			if (userSettings.showOfflineCounter == false) {
-				offlineCounterStyle = { color: "var(--channels-default)", fontWeight: "bold", display: "none", padding: "24px 8px 0 16px", height: "40px", boxSizing: "border-box", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden", textTransform: "uppercase", fontSize: "12px", lineHeight: "16px", letterSpacing: ".02em", fontFamily: "var(--font-display)", fontWeight: "600", flex: "1 1 auto", color: "var(--channels-default)" }
+				offlineCounterStyle = { display: "none" }
 			} else {
-				offlineCounterStyle = { color: "var(--channels-default)", fontWeight: "bold", padding: "24px 8px 0 16px", height: "40px", boxSizing: "border-box", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden", textTransform: "uppercase", fontSize: "12px", lineHeight: "16px", letterSpacing: ".02em", fontFamily: "var(--font-display)", fontWeight: "600", flex: "1 1 auto", color: "var(--channels-default)" }
+				offlineCounterStyle = { color: "var(--channels-default)", padding: "24px 8px 0 16px", boxSizing: "border-box", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden", textTransform: "uppercase", fontSize: "12px", lineHeight: "16px", letterSpacing: ".02em", fontFamily: "var(--font-display)", fontWeight: "600", flex: "1 1 auto" }
 			}
 			offlineCounter = React.createElement("div", {
-					className: "member_counter_wrapper",
+					className: "member_counter_row",
 					style: { textAlign: "center" },
 				},
 				React.createElement("h1", {
@@ -94,12 +95,12 @@ class MemberCounter {
 						totalCounterStyle = { textAlign: "center", marginBottom: "-10px" }
 					}
 					var totalCounter = React.createElement("div", {
-							className: "member_counter_wrapper",
+							className: "member_counter_row",
 							style: totalCounterStyle,
 						},
 						React.createElement("h1", {
 								className: "member_counter_text total_member_counter",
-								style: { color: "var(--channels-default)", fontWeight: "bold", padding: "24px 8px 0 16px", height: "40px", boxSizing: "border-box", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden", textTransform: "uppercase", fontSize: "12px", lineHeight: "16px", letterSpacing: ".02em", fontFamily: "var(--font-display)", fontWeight: "600", flex: "1 1 auto", color: "var(--channels-default)" },
+								style: { color: "var(--channels-default)", padding: "24px 8px 0 16px", boxSizing: "border-box", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden", textTransform: "uppercase", fontSize: "12px", lineHeight: "16px", letterSpacing: ".02em", fontFamily: "var(--font-display)", fontWeight: "600", flex: "1 1 auto" },
 							},
 							`🔵 Total Members - ` + MemberCount.toLocaleString()
 						)
@@ -123,24 +124,24 @@ class MemberCounter {
 						OnlineMembersFinal = OnlineMembersCounted.toLocaleString()
 					}
 					var onlineCounter = React.createElement("div", {
-							className: "member_counter_wrapper",
+							className: "member_counter_row",
 							style: onlineCounterStyle,
 						},
 						React.createElement("h1", {
 								className: "member_counter_text online_member_counter",
-								style: { color: "var(--channels-default)", fontWeight: "bold", padding: "24px 8px 0 16px", height: "40px", boxSizing: "border-box", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden", textTransform: "uppercase", fontSize: "12px", lineHeight: "16px", letterSpacing: ".02em", fontFamily: "var(--font-display)", fontWeight: "600", flex: "1 1 auto", color: "var(--channels-default)" },
+								style: { color: "var(--channels-default)", padding: "24px 8px 0 16px", boxSizing: "border-box", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden", textTransform: "uppercase", fontSize: "12px", lineHeight: "16px", letterSpacing: ".02em", fontFamily: "var(--font-display)", fontWeight: "600", flex: "1 1 auto" },
 							},
 							`🟢 Online - ` + OnlineMembersFinal
 						)
 					);
 				} else if (MemberCount != null) {
 					var onlineCounter = React.createElement("div", {
-							className: "member_counter_wrapper",
+							className: "member_counter_row",
 							style: { textAlign: "center" },
 						},
 						React.createElement("h1", {
 								className: "member_counter_text online_member_counter",
-								style: { color: "var(--channels-default)", fontWeight: "bold", padding: "24px 8px 0 16px", height: "40px", boxSizing: "border-box", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden", textTransform: "uppercase", fontSize: "12px", lineHeight: "16px", letterSpacing: ".02em", fontFamily: "var(--font-display)", fontWeight: "600", flex: "1 1 auto", color: "var(--channels-default)" },
+								style: { color: "var(--channels-default)", padding: "24px 8px 0 16px", boxSizing: "border-box", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden", textTransform: "uppercase", fontSize: "12px", lineHeight: "16px", letterSpacing: ".02em", fontFamily: "var(--font-display)", fontWeight: "600", flex: "1 1 auto" },
 							},
 							`🟢 Members - ` + MemberCount.toLocaleString()
 						)
@@ -149,12 +150,12 @@ class MemberCounter {
 			}
 			var dmCounterStyle = {}
 			if (userSettings.showDMsCounter == false) {
-				dmCounterStyle = { color: "var(--channels-default)", fontWeight: "bold", display: "none", padding: "24px 8px 0 16px", height: "40px", boxSizing: "border-box", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden", textTransform: "uppercase", fontSize: "12px", lineHeight: "16px", letterSpacing: ".02em", fontFamily: "var(--font-display)", fontWeight: "600", flex: "1 1 auto", color: "var(--channels-default)" }
+				dmCounterStyle = { display: "none" }
 			} else {
-				dmCounterStyle = { color: "var(--channels-default)", fontWeight: "bold", padding: "24px 8px 0 16px", height: "40px", boxSizing: "border-box", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden", textTransform: "uppercase", fontSize: "12px", lineHeight: "16px", letterSpacing: ".02em", fontFamily: "var(--font-display)", fontWeight: "600", flex: "1 1 auto", color: "var(--channels-default)" }
+				dmCounterStyle = { color: "var(--channels-default)", padding: "24px 8px 0 16px", boxSizing: "border-box", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden", textTransform: "uppercase", fontSize: "12px", lineHeight: "16px", letterSpacing: ".02em", fontFamily: "var(--font-display)", fontWeight: "600", flex: "1 1 auto" }
 			}
 			const dmCounter = React.createElement("div", {
-					className: "member_counter_wrapper",
+					className: "member_counter_row",
 					style: { textAlign: "center", marginTop: "-20px", marginBottom: "15px" },
 				},
 				React.createElement("h3", {
@@ -164,8 +165,19 @@ class MemberCounter {
 					`DMs - ${DMCount?.length.toLocaleString()}`
 				)
 			);
+			var counterWrapperStyle = {}
+			if (userSettings.isAlwaysOnTop == false) {
+				counterWrapperStyle = { paddingBottom: "24px", borderBottom: "var(--border-subtle) 1px solid" }
+			} else {
+				counterWrapperStyle = { position: "sticky", top: "0px", zIndex: "999", background: "inherit", paddingBottom: "24px", borderBottom: "var(--border-subtle) 1px solid" }
+			}
 			const counterWrapper = MemberCount?.toLocaleString() !== undefined ? (
-				React.createElement("div", null, totalCounter, onlineCounter, offlineCounter)
+				React.createElement("div", {
+						className: "member_counter_wrapper",
+						style: counterWrapperStyle,
+					},
+					null, totalCounter, onlineCounter, offlineCounter
+				)
 			) : (
 				React.createElement("div", {
 						className: "dm_counter_wrapper",
@@ -231,6 +243,15 @@ class MemberCounter {
 					value: userSettings["showDMsCounter"],
 					onChange: (value) => {
 						userSettings["showDMsCounter"] = value;
+					}
+				},
+				{
+					type: "switch",
+					id: "switch",
+					name: "Always on Top: ",
+					value: userSettings["isAlwaysOnTop"],
+					onChange: (value) => {
+						userSettings["isAlwaysOnTop"] = value;
 					}
 				}
 			],
