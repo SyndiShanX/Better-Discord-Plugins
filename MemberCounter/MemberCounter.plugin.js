@@ -2,15 +2,15 @@
  * @name MemberCounter
  * @author SyndiShanX, imafrogowo
  * @description Displays the Member Count of a Server at the top of the Member List, can be configured to show Total Members, Online Members, Offline Members, and a DM Counter.
- * @version 2.31
+ * @version 2.32
  * @invite yzYKRKeWNh
  * @source https://github.com/SyndiShanX/Better-Discord-Plugins/blob/main/MemberCounter/
  * @website https://syndishanx.github.io/Better-Discord-Plugins/
  */
 
-const { Webpack: {Filters, getByKeys, getModule, modules, Stores}, React, Patcher, Utils } = BdApi;
+const { Webpack: {getByKeys, getBulk, getModule, modules, Stores}, React, Patcher, Utils, Webpack } = BdApi;
 const { SelectedGuildStore, GuildMemberCountStore, SelectedChannelStore, ChannelStore, ChannelMemberStore, PrivateChannelSortStore, ThreadMemberListStore } = Stores;
-
+	
 // Set Default Settings
 const userSettings = {
 	showTotalCounter: true,
@@ -30,9 +30,11 @@ class MemberCounter {
   }
   start() {
 		Object.assign(userSettings, BdApi.Data.load("MemberCounter", "settings"));
-		// Fetch the MemberList Element
-		const Bulk = getByKeys('createToast', 'popToast');
-		const MemberList = Utils.findInTree(Bulk, (m) => Filters.byStrings('renderSection:', 'renderListHeader:')(m?.render));
+		// Fetch the MemberList Element - Arashiryuu
+		const Filters = Object.create(Webpack.Filters);
+		Object.assign(Filters, {Forwarded: {byStrings: (...strings) => (m) => Filters.byStrings(...strings)(m?.render)}});
+		const queries = [{filter: Filters.Forwarded.byStrings('renderSection:', 'renderListHeader:'), searchExports: true, raw: true}];
+		const MemberList = getBulk(...queries)[0].exports.OZ;
 		
 		this.addPatch('after', MemberList, 'render', (thisObj, [args], returnVal) => {
 			// Fetch the Various Stores and Member Counts using BdApi
