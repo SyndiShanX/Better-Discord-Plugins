@@ -2,7 +2,7 @@
  * @name MemberCounter
  * @author SyndiShanX, imafrogowo
  * @description Displays the Member Count of a Server at the top of the Member List, can be configured to show Total Members, Online Members, Offline Members, and a DM Counter.
- * @version 2.32
+ * @version 2.33
  * @invite yzYKRKeWNh
  * @source https://github.com/SyndiShanX/Better-Discord-Plugins/blob/main/MemberCounter/
  * @website https://syndishanx.github.io/Better-Discord-Plugins/
@@ -30,13 +30,8 @@ class MemberCounter {
   }
   start() {
 		Object.assign(userSettings, BdApi.Data.load("MemberCounter", "settings"));
-		// Fetch the MemberList Element - Arashiryuu
-		const Filters = Object.create(Webpack.Filters);
-		Object.assign(Filters, {Forwarded: {byStrings: (...strings) => (m) => Filters.byStrings(...strings)(m?.render)}});
-		const queries = [{filter: Filters.Forwarded.byStrings('renderSection:', 'renderListHeader:'), searchExports: true, raw: true}];
-		const MemberList = getBulk(...queries)[0].exports.OZ;
 		
-		this.addPatch('after', MemberList, 'render', (thisObj, [args], returnVal) => {
+		const memberListPatch = (thisObj, [args], returnVal) => {
 			// Fetch the Various Stores and Member Counts using BdApi
 			const { groups } = ChannelMemberStore.getProps(SelectedGuildStore.getGuildId(), SelectedChannelStore.getCurrentlySelectedChannelId());
 			var MemberCount = GuildMemberCountStore.getMemberCount(SelectedGuildStore.getGuildId());
@@ -194,19 +189,58 @@ class MemberCounter {
 			//console.log(returnVal.props.className)
 			
 			// Append Counter Elements | Selects Member List | Selects DM List
+			const isCounterElement = (child) => child?.props?.className == "member_counter_wrapper" || child?.props?.className == "dm_counter_wrapper";
+			
 			if (returnVal.props.className.split(' ')[0].startsWith('members')) {
 				const children = returnVal.props.children;
-				children.splice(0, 0, counterWrapper);
+				const existingIndex = children.findIndex(isCounterElement);
+				if (existingIndex != -1) {
+					children[existingIndex] = counterWrapper;
+				} else {
+					children.splice(0, 0, counterWrapper);
+				}
 				returnVal.props.children = children;
 			} else if (returnVal.props.id != 'channels' && returnVal.props["data-list-id"].startsWith('private')) {
 				const children = returnVal.props.children[0].props.children.props.children;
-				children.splice(1, 0, counterWrapper);
+				const existingIndex = children.findIndex(isCounterElement);
+				if (existingIndex != -1) {
+					children[existingIndex] = counterWrapper;
+				} else {
+					children.splice(1, 0, counterWrapper);
+				}
 				returnVal.props.children[0].props.children.props.children = children;
 			}
+		};
+
+		// Fetch the MemberList Element
+		const getSrc = (export_module) => {
+			const render_function = typeof export_module === "function" ? export_module : (export_module?.render ?? export_module?.type?.render ?? export_module?.type);
+			return typeof render_function === "function" ? render_function.toString() : "";
+		};
+		
+		const filter = (export_module) => {
+			const src = getSrc(export_module);
+			return !!src && src.includes('renderListHeader');
+		};
+		
+		const candidates = Webpack.getModules(filter, { searchExports: true, raw: true });
+		
+		const patched = new Set();
+		candidates.forEach((rawModule) => {
+			Object.keys(rawModule.exports).forEach((key) => {
+				if(filter(rawModule.exports[key])) {
+					if(patched.has(rawModule.exports[key])) {
+						return;
+					}
+					patched.add(rawModule.exports[key]);
+					
+					this.addPatch('after', rawModule.exports, key, memberListPatch);
+				}
+			});
 		});
   }
   stop() {
-		this.patches.forEach((x) => x());
+		this.patches.forEach((x) => x?.());
   }
 	getSettingsPanel() {
 		return BdApi.UI.buildSettingsPanel({
