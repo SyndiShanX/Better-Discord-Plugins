@@ -166,7 +166,7 @@ class MemberCounter {
 			if (userSettings.isAlwaysOnTop == false) {
 				counterWrapperStyle = { paddingBottom: "24px", borderBottom: "var(--border-subtle) 1px solid" }
 			} else {
-				counterWrapperStyle = { position: "sticky", top: "0px", zIndex: "999", background: "inherit", paddingBottom: "24px", borderBottom: "var(--border-subtle) 1px solid" }
+				counterWrapperStyle = { position: "sticky", top: "0px", zIndex: "99", background: "inherit", paddingBottom: "24px", borderBottom: "var(--border-subtle) 1px solid" }
 			}
 			const counterWrapper = MemberCount?.toLocaleString() !== undefined ? (
 				React.createElement("div", {
